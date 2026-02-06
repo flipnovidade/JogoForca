@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "category": "br animal",
+    "word": "elephant",
+    "assay": "A large land mammal known for its trunk and big ears."
+  },
+  {
+    "id": 2,
+    "category": "br animal",
+    "word": "giraffe",
+    "assay": "The tallest land animal, famous for its long neck."
+  },
+  {
+    "id": 3,
+    "category": "br house",
+    "word": "kitchen",
+    "assay": "The place in a house where meals are prepared."
+  },
+  {
+    "id": 4,
+    "category": "br house",
+    "word": "bedroom",
+    "assay": "A room in a house used for sleeping and resting."
+  },
+  {
+    "id": 5,
+    "category": "br people",
+    "word": "scientist",
+    "assay": "A person who studies or works in science."
+  },
+  {
+    "id": 6,
+    "category": "br people",
+    "word": "architect",
+    "assay": "A professional who designs buildings and structures."
+  },
+  {
+    "id": 7,
+    "category": "br history",
+    "word": "revolution",
+    "assay": "A major change in political power or social organization."
+  },
+  {
+    "id": 8,
+    "category": "br history",
+    "word": "civilization",
+    "assay": "An advanced stage of human society and culture."
+  },
+  {
+    "id": 9,
+    "category": "br technology",
+    "word": "computer",
+    "assay": "An electronic device used to process and store information."
+  },
+  {
+    "id": 10,
+    "category": "br technology",
+    "word": "algorithm",
+    "assay": "A set of rules or steps used to solve a problem."
+  }
+]
