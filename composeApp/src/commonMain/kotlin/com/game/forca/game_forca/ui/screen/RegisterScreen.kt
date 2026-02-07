@@ -17,10 +17,9 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,7 +59,9 @@ import com.game.forca.game_forca.resources.register_button
 import com.game.forca.game_forca.resources.register_subtitle
 import com.game.forca.game_forca.resources.register_title
 import com.game.forca.game_forca.resources.terms_privacy_text
+import com.game.forca.game_forca.ui.viewmodel.RegisterScreenViewModel
 import org.jetbrains.compose.resources.stringResource
+import org.koin.compose.koinInject
 
 enum class RegisterScreenState {
     Register,
@@ -71,73 +72,55 @@ enum class RegisterScreenState {
 @Composable
 fun RegisterScreen(
     navController: NavHostController,
-    screenState: RegisterScreenState = RegisterScreenState.Register
+    screenState: RegisterScreenState = RegisterScreenState.Register,
+    registerScreenViewModel: RegisterScreenViewModel = koinInject<RegisterScreenViewModel>()
 ) {
-    var currentState by remember(screenState) { mutableStateOf(screenState) }
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var passwordVisible by remember { mutableStateOf(false) }
-    var showErrors by remember { mutableStateOf(false) }
+    val uiState by registerScreenViewModel.uiState.collectAsState()
+    val validation by registerScreenViewModel.validation.collectAsState()
 
-    val existingEmails = remember {
-        setOf(
-            "me@email.com",
-            "alice@email.com",
-            "bob@email.com"
-        )
+    LaunchedEffect(screenState) {
+        registerScreenViewModel.setScreenState(screenState)
     }
 
-    val emailRegex = remember { Regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$") }
-    val isEmailValid = emailRegex.matches(email)
-    val isEmailTaken = email.isNotBlank() && email.lowercase() in existingEmails
-    val isPasswordMismatch =
-        currentState == RegisterScreenState.Register && password != confirmPassword
+    val currentState = uiState.screenState
+    val name = uiState.name
+    val email = uiState.email
+    val password = uiState.password
+    val confirmPassword = uiState.confirmPassword
+    val passwordVisible = uiState.passwordVisible
+    val showErrors = uiState.showErrors
 
-    val isNameValid = name.isNotBlank()
-    val isPasswordValid = password.isNotBlank()
-
-    val shouldValidateEmail = currentState != RegisterScreenState.Registered && showErrors
-    val shouldValidatePassword = currentState != RegisterScreenState.Registered && showErrors
-    val shouldValidateConfirm =
-        currentState == RegisterScreenState.Register && showErrors
-
-    val nameError = if (showErrors && !isNameValid) {
+    val nameError = if (showErrors && !validation.isNameValid) {
         stringResource(Res.string.name_required_error)
     } else {
         null
     }
     val emailError = when {
-        shouldValidateEmail && !isEmailValid ->
+        validation.shouldValidateEmail && !validation.isEmailValid ->
             stringResource(Res.string.email_invalid_error)
-        currentState == RegisterScreenState.Register && shouldValidateEmail && isEmailTaken ->
+        currentState == RegisterScreenState.Register &&
+            validation.shouldValidateEmail &&
+            validation.isEmailTaken ->
             stringResource(Res.string.email_exists_error)
         else -> null
     }
-    val passwordError = if (shouldValidatePassword && !isPasswordValid) {
+    val passwordError = if (validation.shouldValidatePassword && !validation.isPasswordValid) {
         stringResource(Res.string.password_required_error)
     } else {
         null
     }
-    val confirmPasswordError = if (shouldValidateConfirm && isPasswordMismatch) {
+    val confirmPasswordError =
+        if (validation.shouldValidateConfirm && validation.isPasswordMismatch) {
         stringResource(Res.string.passwords_mismatch_error)
     } else {
         null
     }
 
-    val isRegisterValid =
-        isNameValid && isEmailValid && !isEmailTaken && isPasswordValid && !isPasswordMismatch
-    val isLoginValid =
-        isNameValid && isEmailValid && isPasswordValid
-
-    val onNameChange: (String) -> Unit = { value -> name = value }
-    val onEmailChange: (String) -> Unit = { value -> email = value }
-    val onPasswordChange: (String) -> Unit = { value -> password = value }
-    val onConfirmPasswordChange: (String) -> Unit = { value -> confirmPassword = value }
-    val onTogglePasswordVisibility: () -> Unit = {
-        passwordVisible = !passwordVisible
-    }
+    val onNameChange: (String) -> Unit = registerScreenViewModel::onNameChange
+    val onEmailChange: (String) -> Unit = registerScreenViewModel::onEmailChange
+    val onPasswordChange: (String) -> Unit = registerScreenViewModel::onPasswordChange
+    val onConfirmPasswordChange: (String) -> Unit = registerScreenViewModel::onConfirmPasswordChange
+    val onTogglePasswordVisibility: () -> Unit =  registerScreenViewModel::togglePasswordVisibility
     var onBack: () -> Unit = {
         println("onBack")
     }
@@ -256,8 +239,8 @@ fun RegisterScreen(
                     PrimaryButton(
                         text = stringResource(Res.string.register_button),
                         onClick = {
-                            showErrors = true
-                            if (isRegisterValid) {
+                            registerScreenViewModel.setShowErrors(true)
+                            if (validation.isRegisterValid) {
                                 onRegister()
                             }
                         },
@@ -268,8 +251,8 @@ fun RegisterScreen(
                     PrimaryButton(
                         text = stringResource(Res.string.login_button),
                         onClick = {
-                            showErrors = true
-                            if (isLoginValid) {
+                            registerScreenViewModel.setShowErrors(true)
+                            if (validation.isLoginValid) {
                                 onLogin()
                             }
                         },
@@ -280,7 +263,7 @@ fun RegisterScreen(
                     PrimaryButton(
                         text = stringResource(Res.string.logout_button),
                         onClick = {
-                            showErrors = false
+                            registerScreenViewModel.setShowErrors(false)
                             onLogout()
                         },
                         enabled = true
@@ -311,8 +294,8 @@ fun RegisterScreen(
                             color = Color(0xFF4A8CFF),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.clickable {
-                                showErrors = false
-                                currentState = RegisterScreenState.Login
+                                registerScreenViewModel.setShowErrors(false)
+                                registerScreenViewModel.setScreenState(RegisterScreenState.Login)
                             }
                         )
                     }
@@ -326,8 +309,8 @@ fun RegisterScreen(
                             color = Color(0xFF4A8CFF),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.clickable {
-                                showErrors = false
-                                currentState = RegisterScreenState.Register
+                                registerScreenViewModel.setShowErrors(false)
+                                registerScreenViewModel.setScreenState(RegisterScreenState.Register)
                             }
                         )
                     }
