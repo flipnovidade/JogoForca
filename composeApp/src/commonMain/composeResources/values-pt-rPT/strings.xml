@@ -48,9 +48,13 @@
     <string name="confirm_password_label">CONFIRMAR SENHA</string>
     <string name="confirm_password_placeholder">Repetir Senha</string>
     <string name="register_button">Cadastrar  →</string>
+    <string name="login_button">Entrar  →</string>
     <string name="terms_privacy_text">Ao se cadastrar, você concorda com nossos\nTermos de Uso e Privacidade.</string>
     <string name="already_have_account">Já possui uma conta? </string>
     <string name="login_link">Entrar</string>
+    <string name="email_invalid_error">Informe um email válido.</string>
+    <string name="email_exists_error">Email já cadastrado.</string>
+    <string name="passwords_mismatch_error">As senhas não são iguais.</string>
     <string name="profile_icon">👤➕</string>
     <string name="password_visible_icon">🙈</string>
     <string name="password_hidden_icon">👁️</string>

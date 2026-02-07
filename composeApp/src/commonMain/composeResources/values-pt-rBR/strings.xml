@@ -6,7 +6,7 @@
     <string name="section_ranking_icon">📊</string>
     <string name="ranking_loading">Carregando ranking...</string>
     <string name="ranking_error">Erro ao carregar ranking.</string>
-    <string name="ranking_empty">Nenhum ‘ranking’ encontrado.</string>
+    <string name="ranking_empty">Nenhum ranking encontrado.</string>
     <string name="section_app_details_title">Detalhes do App</string>
     <string name="section_app_details_icon">ℹ️</string>
     <string name="section_credits_title">Créditos</string>
@@ -16,9 +16,9 @@
     <string name="credit_illustrations_title">ILUSTRAÇÕES</string>
     <string name="credit_illustrations_names">Sarah Chen, Vector Lab</string>
     <string name="credit_ack_title">AGRADECIMENTOS</string>
-    <string name="credit_ack_text">A todos os nossos testadores beta que ajudaram a eliminar ‘bugs’ e melhorar nosso jogo.</string>
+    <string name="credit_ack_text">A todos os nossos testadores beta que ajudaram a eliminar bugs e melhorar nosso jogo.</string>
     <string name="credit_awards_title">PREMIAÇÃO</string>
-    <string name="credit_awards_text">No último dia de cada mês, na última hora do dia, identificamos os 5 jogadores com maior pontuação. Em seguida, fazemos uma verificação para garantir que todos os pontos estejam conforme as regras. Caso algum jogador não atenda aos critérios, ele será desclassificado e o ‘ranking’ será atualizado. Após a análise final, entraremos em contato com os vencedores pelo e-mail cadastrado para confirmar os dados e realizar o envio dos prêmios.</string>
+    <string name="credit_awards_text">No último dia de cada mês, na última hora do dia, identificamos os 5 jogadores com maior pontuação. Em seguida, fazemos uma verificação para garantir que todos os pontos estejam de acordo com as regras. Caso algum jogador não atenda aos critérios, ele será desclassificado e o ranking será atualizado. Após a análise final, entraremos em contato com os vencedores pelo e-mail cadastrado para confirmar os dados e realizar o envio dos prêmios.</string>
     <string name="ranking_header_position">POSIÇÃO</string>
     <string name="ranking_header_email">EMAIL</string>
     <string name="ranking_header_points">PONTOS</string>
@@ -48,9 +48,13 @@
     <string name="confirm_password_label">CONFIRMAR SENHA</string>
     <string name="confirm_password_placeholder">Repetir Senha</string>
     <string name="register_button">Cadastrar  →</string>
+    <string name="login_button">Entrar  →</string>
     <string name="terms_privacy_text">Ao se cadastrar, você concorda com nossos\nTermos de Uso e Privacidade.</string>
     <string name="already_have_account">Já possui uma conta? </string>
     <string name="login_link">Entrar</string>
+    <string name="email_invalid_error">Informe um email válido.</string>
+    <string name="email_exists_error">Email já cadastrado.</string>
+    <string name="passwords_mismatch_error">As senhas não são iguais.</string>
     <string name="profile_icon">👤➕</string>
     <string name="password_visible_icon">🙈</string>
     <string name="password_hidden_icon">👁️</string>
