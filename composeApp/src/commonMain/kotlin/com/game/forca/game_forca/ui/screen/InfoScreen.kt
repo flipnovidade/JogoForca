@@ -18,6 +18,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,7 +41,9 @@ fun InfoScreen(
     navController: NavHostController,
     infoScreenViewModel: InfoScreenViewModel = koinInject<InfoScreenViewModel>()
 ) {
-    val ranking = infoScreenViewModel.ranking
+    val ranking by infoScreenViewModel.ranking.collectAsState()
+    val isLoading by infoScreenViewModel.isLoading.collectAsState()
+    val errorMessage by infoScreenViewModel.errorMessage.collectAsState()
     val myEmail = infoScreenViewModel.myEmail
 
     val onBack: () -> Unit = {
@@ -76,7 +80,12 @@ fun InfoScreen(
             Spacer(Modifier.height(24.dp))
 
             SectionTitle("Ranking Geral", "📊")
-            RankingCard(ranking, myEmail)
+            when {
+                isLoading -> RankingStatusCard("Carregando ranking...")
+                errorMessage != null -> RankingStatusCard(errorMessage ?: "Erro ao carregar ranking.")
+                ranking.isEmpty() -> RankingStatusCard("Nenhum ranking encontrado.")
+                else -> RankingCard(ranking, myEmail)
+            }
 
             Spacer(Modifier.height(24.dp))
 
@@ -112,6 +121,10 @@ fun CreditsCard() {
         CreditItem(
             "AGRADECIMENTOS",
             "A todos os nossos testadores beta que ajudaram a eliminar bugs e melhorar o dicionário."
+        )
+        CreditItem(
+            "PREMIAÇÃO",
+            "No último dia de cada mês, na última hora do dia, identificamos os 5 jogadores com maior pontuação. Em seguida, fazemos uma verificação para garantir que todos os pontos estejam de acordo com as regras. Caso algum jogador não atenda aos critérios, ele será desclassificado e o ranking será atualizado. Após a análise final, entraremos em contato com os vencedores pelo e-mail cadastrado para confirmar os dados e realizar o envio dos prêmios."
         )
     }
 }
@@ -186,6 +199,24 @@ fun RankingCard(
                 highlight = item.email == myEmail
             )
         }
+    }
+}
+
+@Composable
+private fun RankingStatusCard(message: String) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color(0xFF121C3D))
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = message,
+            color = Color.White.copy(alpha = 0.8f),
+            textAlign = TextAlign.Center
+        )
     }
 }
 

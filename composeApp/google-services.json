@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "272857958800",
+    "project_id": "jogoforca-2bc34",
+    "storage_bucket": "jogoforca-2bc34.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:272857958800:android:b582a436f28f22d15f4b15",
+        "android_client_info": {
+          "package_name": "com.game.forca.flipsofts"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyABAiLFjssy9u828kq0fQPVWJ11Dk9SbOw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

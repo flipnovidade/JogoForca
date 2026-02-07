@@ -7,6 +7,8 @@ plugins {
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
     id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
+    id("org.jetbrains.kotlin.native.cocoapods")
+    id("com.google.gms.google-services")
 }
 
 kotlin {
@@ -26,6 +28,14 @@ kotlin {
         }
     }
 
+    cocoapods {
+        summary = "Jogo Forca shared module"
+        homepage = "https://example.com"
+        ios.deploymentTarget = "14.1"
+        version = "0.0.1"
+        pod("FirebaseDatabase", version = "10.29.0")
+    }
+
     val koinVersion = "4.1.0"
 
     sourceSets {
@@ -35,6 +45,9 @@ kotlin {
             implementation("androidx.compose.material3:material3")
             implementation("androidx.core:core-splashscreen:1.0.1")
             implementation("io.insert-koin:koin-android:3.5.3")
+            implementation("com.google.firebase:firebase-config:22.1.1")
+            implementation("com.google.firebase:firebase-database:21.0.0")
+            implementation("com.google.accompanist:accompanist-permissions:0.37.3")
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -53,6 +66,8 @@ kotlin {
             implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta03")
             implementation("org.jetbrains.compose.material:material-icons-extended:1.7.3")
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+            implementation(libs.gitlive.firebase.app)
+            implementation(libs.gitlive.firebase.database)
 
         }
         iosMain.dependencies {
@@ -101,6 +116,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.firebase.config.ktx)
+    implementation(libs.androidx.exifinterface)
     debugImplementation(libs.compose.uiTooling)
 }
 

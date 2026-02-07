@@ -8,11 +8,7 @@ import org.koin.dsl.module
 
 @SuppressLint("ServiceCast")
 fun moduleAndroid() = module {
-
     //scope(named("gameScreenScope")) {
         //single<> { FirebaseRemoteConfigsBridge() }
-        factory { GameScreenviewModel() }
-        factory { InfoScreenViewModel() }
     //}
-
 }
