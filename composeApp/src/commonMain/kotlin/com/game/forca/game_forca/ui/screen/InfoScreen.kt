@@ -52,8 +52,7 @@ fun InfoScreen(
     }
 
     RegisterBackHandler  {
-        navController.popBackStack()
-        println("OnBack pressed")
+        onBack
     }
 
     Box(

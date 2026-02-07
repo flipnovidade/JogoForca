@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class FirebaseRankingRepository : RankingRepository {
-    private val rankingReference = Firebase.database.reference("ranking")
+    private val rankingReference = Firebase.database.reference("users")
 
     override fun observeRanking(): Flow<List<RankingItem>> {
         return rankingReference.valueEvents.map { snapshot ->

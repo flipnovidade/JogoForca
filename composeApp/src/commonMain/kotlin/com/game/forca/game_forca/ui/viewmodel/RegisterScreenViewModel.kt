@@ -1,6 +1,8 @@
 package com.game.forca.game_forca.ui.viewmodel
 
+import com.game.forca.game_forca.data.RegisterUserRepository
 import com.game.forca.game_forca.ui.screen.RegisterScreenState
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -29,19 +31,33 @@ data class RegisterValidation(
     val isLoginValid: Boolean = false
 )
 
-class RegisterScreenViewModel : BaseViewModel() {
+class RegisterScreenViewModel(
+    private val registerUserRepository: RegisterUserRepository
+) : BaseViewModel() {
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState: StateFlow<RegisterUiState> = _uiState
 
     private val _validation = MutableStateFlow(RegisterValidation())
     val validation: StateFlow<RegisterValidation> = _validation.asStateFlow()
 
-    private val existingEmails = setOf(
-        "me@email.com",
-        "alice@email.com",
-        "bob@email.com"
-    )
     private val emailRegex = Regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")
+
+    init {
+        viewModelScope.launch {
+            val user = registerUserRepository.fetchFirstUser() ?: return@launch
+            _uiState.update {
+                it.copy(
+                    screenState = RegisterScreenState.Registered,
+                    name = user.name,
+                    email = user.email,
+                    password = user.password,
+                    confirmPassword = user.password,
+                    showErrors = false
+                )
+            }
+            updateValidation()
+        }
+    }
 
     fun setScreenState(state: RegisterScreenState) {
         _uiState.update { it.copy(screenState = state, showErrors = false) }
@@ -81,7 +97,7 @@ class RegisterScreenViewModel : BaseViewModel() {
         val state = _uiState.value
         val isNameValid = state.name.isNotBlank()
         val isEmailValid = emailRegex.matches(state.email)
-        val isEmailTaken = state.email.isNotBlank() && state.email.lowercase() in existingEmails
+        val isEmailTaken = false
         val isPasswordValid = state.password.isNotBlank()
         val isPasswordMismatch =
             state.screenState == RegisterScreenState.Register &&

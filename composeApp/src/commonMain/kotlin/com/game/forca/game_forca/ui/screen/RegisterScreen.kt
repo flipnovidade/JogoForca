@@ -59,6 +59,7 @@ import com.game.forca.game_forca.resources.register_button
 import com.game.forca.game_forca.resources.register_subtitle
 import com.game.forca.game_forca.resources.register_title
 import com.game.forca.game_forca.resources.terms_privacy_text
+import com.game.forca.game_forca.ui.components.RegisterBackHandler
 import com.game.forca.game_forca.ui.viewmodel.RegisterScreenViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
@@ -121,17 +122,22 @@ fun RegisterScreen(
     val onPasswordChange: (String) -> Unit = registerScreenViewModel::onPasswordChange
     val onConfirmPasswordChange: (String) -> Unit = registerScreenViewModel::onConfirmPasswordChange
     val onTogglePasswordVisibility: () -> Unit =  registerScreenViewModel::togglePasswordVisibility
-    var onBack: () -> Unit = {
+    val onBack: () -> Unit = {
+        navController.popBackStack()
         println("onBack")
     }
-    var onRegister: () -> Unit = {
+    val onRegister: () -> Unit = {
         println("onRegister")
     }
-    var onLogin: () -> Unit = {
+    val onLogin: () -> Unit = {
         println("onLogin")
     }
-    var onLogout: () -> Unit = {
+    val onLogout: () -> Unit = {
         println("onLogout")
+    }
+
+    RegisterBackHandler  {
+        onRegister
     }
 
     Box(
@@ -204,18 +210,16 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            if (currentState != RegisterScreenState.Registered) {
-                PasswordInput(
-                    label = stringResource(Res.string.password_label),
-                    placeholder = stringResource(Res.string.password_placeholder),
-                    value = password,
-                    isVisible = passwordVisible,
-                    onValueChange = onPasswordChange,
-                    onToggleVisibility = onTogglePasswordVisibility,
-                    enabled = true,
-                    errorMessage = passwordError
-                )
-            }
+            PasswordInput(
+                label = stringResource(Res.string.password_label),
+                placeholder = stringResource(Res.string.password_placeholder),
+                value = password,
+                isVisible = passwordVisible,
+                onValueChange = onPasswordChange,
+                onToggleVisibility = onTogglePasswordVisibility,
+                enabled = currentState != RegisterScreenState.Registered,
+                errorMessage = passwordError
+            )
 
             if (currentState == RegisterScreenState.Register) {
                 Spacer(Modifier.height(20.dp))

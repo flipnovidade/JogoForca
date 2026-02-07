@@ -238,19 +238,7 @@ fun GameScreen(
     }
 
     RegisterBackHandler  {
-        // 1. Remove qualquer estado/diálogo
-        val previousRoute = navController.previousBackStackEntry?.destination?.route
-
-        if (previousRoute == "splashScreen") {
-            navController.popBackStack()
-        } else if (previousRoute == null) {
-            closeApp()
-        } else {
-            navController.popBackStack()
-        }
-
-        println("📍 Tentando fechar...")
-        println("   Tem anterior? ${navController.previousBackStackEntry != null}")
+       onClose
     }
 
     Box(
