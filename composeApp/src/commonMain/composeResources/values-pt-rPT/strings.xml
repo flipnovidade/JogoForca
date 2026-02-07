@@ -49,6 +49,7 @@
     <string name="confirm_password_placeholder">Repetir Senha</string>
     <string name="register_button">Cadastrar  →</string>
     <string name="login_button">Entrar  →</string>
+    <string name="logout_button">Sair  →</string>
     <string name="terms_privacy_text">Ao se cadastrar, você concorda com nossos\nTermos de Uso e Privacidade.</string>
     <string name="already_have_account">Já possui uma conta? </string>
     <string name="login_link">Entrar</string>

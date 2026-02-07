@@ -47,6 +47,7 @@ import com.game.forca.game_forca.resources.full_name_label
 import com.game.forca.game_forca.resources.full_name_placeholder
 import com.game.forca.game_forca.resources.login_button
 import com.game.forca.game_forca.resources.login_link
+import com.game.forca.game_forca.resources.logout_button
 import com.game.forca.game_forca.resources.password_hidden_icon
 import com.game.forca.game_forca.resources.password_label
 import com.game.forca.game_forca.resources.password_placeholder
@@ -120,6 +121,9 @@ fun RegisterScreen(
     }
     var onLogin: () -> Unit = {
         println("onLogin")
+    }
+    var onLogout: () -> Unit = {
+        println("onLogout")
     }
 
     Box(
@@ -235,7 +239,13 @@ fun RegisterScreen(
                         enabled = emailError == null
                     )
                 }
-                RegisterScreenState.Registered -> Unit
+                RegisterScreenState.Registered -> {
+                    PrimaryButton(
+                        text = stringResource(Res.string.logout_button),
+                        onClick = onLogout,
+                        enabled = true
+                    )
+                }
             }
 
             Spacer(Modifier.height(16.dp))

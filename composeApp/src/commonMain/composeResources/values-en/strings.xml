@@ -47,11 +47,12 @@
     <string name="password_placeholder">Create a strong password</string>
     <string name="confirm_password_label">CONFIRM PASSWORD</string>
     <string name="confirm_password_placeholder">Repeat password</string>
-    <string name="login_link">Sign in</string>
     <string name="register_button">Register  →</string>
     <string name="login_button">Login  →</string>
+    <string name="logout_button">Logout  →</string>
     <string name="terms_privacy_text">By signing up, you agree to our\nTerms of Use and Privacy Policy.</string>
     <string name="already_have_account">Already have an account? </string>
+    <string name="login_link">Sign in</string>
     <string name="email_invalid_error">Enter a valid email.</string>
     <string name="email_exists_error">Email already registered.</string>
     <string name="passwords_mismatch_error">Passwords do not match.</string>
