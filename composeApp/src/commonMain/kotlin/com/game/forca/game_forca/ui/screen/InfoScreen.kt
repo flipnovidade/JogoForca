@@ -120,7 +120,7 @@ fun CreditsCard() {
         CreditItem("ILUSTRAÇÕES", "Sarah Chen, Vector Lab")
         CreditItem(
             "AGRADECIMENTOS",
-            "A todos os nossos testadores beta que ajudaram a eliminar bugs e melhorar o dicionário."
+            "A todos os nossos testadores beta que ajudaram a eliminar bugs e melhorar nosso jogo."
         )
         CreditItem(
             "PREMIAÇÃO",
@@ -271,7 +271,7 @@ fun AppDetailsCard(appVersion: AppVersion) {
             "${appVersion.name} (Build ${appVersion.build})",
             trailing = "ATUALIZADO"
         )
-        DetailRow("Desenvolvedor", "Lumina Studios Inc.")
+        DetailRow("Desenvolvedor", "Flip Soft.")
         DetailRow("Privacidade", "Outubro 2023")
     }
 }
