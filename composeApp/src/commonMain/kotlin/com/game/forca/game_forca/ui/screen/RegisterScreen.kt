@@ -48,9 +48,11 @@ import com.game.forca.game_forca.resources.full_name_placeholder
 import com.game.forca.game_forca.resources.login_button
 import com.game.forca.game_forca.resources.login_link
 import com.game.forca.game_forca.resources.logout_button
+import com.game.forca.game_forca.resources.name_required_error
 import com.game.forca.game_forca.resources.password_hidden_icon
 import com.game.forca.game_forca.resources.password_label
 import com.game.forca.game_forca.resources.password_placeholder
+import com.game.forca.game_forca.resources.password_required_error
 import com.game.forca.game_forca.resources.password_visible_icon
 import com.game.forca.game_forca.resources.passwords_mismatch_error
 import com.game.forca.game_forca.resources.profile_icon
@@ -71,11 +73,13 @@ fun RegisterScreen(
     navController: NavHostController,
     screenState: RegisterScreenState = RegisterScreenState.Register
 ) {
+    var currentState by remember(screenState) { mutableStateOf(screenState) }
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
+    var showErrors by remember { mutableStateOf(false) }
 
     val existingEmails = remember {
         setOf(
@@ -86,25 +90,46 @@ fun RegisterScreen(
     }
 
     val emailRegex = remember { Regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$") }
-    val isEmailValid = email.isBlank() || emailRegex.matches(email)
+    val isEmailValid = emailRegex.matches(email)
     val isEmailTaken = email.isNotBlank() && email.lowercase() in existingEmails
     val isPasswordMismatch =
-        screenState == RegisterScreenState.Register &&
-            confirmPassword.isNotEmpty() &&
-            password != confirmPassword
+        currentState == RegisterScreenState.Register && password != confirmPassword
 
+    val isNameValid = name.isNotBlank()
+    val isPasswordValid = password.isNotBlank()
+
+    val shouldValidateEmail = currentState != RegisterScreenState.Registered && showErrors
+    val shouldValidatePassword = currentState != RegisterScreenState.Registered && showErrors
+    val shouldValidateConfirm =
+        currentState == RegisterScreenState.Register && showErrors
+
+    val nameError = if (showErrors && !isNameValid) {
+        stringResource(Res.string.name_required_error)
+    } else {
+        null
+    }
     val emailError = when {
-        screenState == RegisterScreenState.Register && !isEmailValid ->
+        shouldValidateEmail && !isEmailValid ->
             stringResource(Res.string.email_invalid_error)
-        screenState == RegisterScreenState.Register && isEmailTaken ->
+        currentState == RegisterScreenState.Register && shouldValidateEmail && isEmailTaken ->
             stringResource(Res.string.email_exists_error)
         else -> null
     }
-    val confirmPasswordError = if (isPasswordMismatch) {
+    val passwordError = if (shouldValidatePassword && !isPasswordValid) {
+        stringResource(Res.string.password_required_error)
+    } else {
+        null
+    }
+    val confirmPasswordError = if (shouldValidateConfirm && isPasswordMismatch) {
         stringResource(Res.string.passwords_mismatch_error)
     } else {
         null
     }
+
+    val isRegisterValid =
+        isNameValid && isEmailValid && !isEmailTaken && isPasswordValid && !isPasswordMismatch
+    val isLoginValid =
+        isNameValid && isEmailValid && isPasswordValid
 
     val onNameChange: (String) -> Unit = { value -> name = value }
     val onEmailChange: (String) -> Unit = { value -> email = value }
@@ -179,7 +204,8 @@ fun RegisterScreen(
                 placeholder = stringResource(Res.string.full_name_placeholder),
                 value = name,
                 onValueChange = onNameChange,
-                enabled = screenState != RegisterScreenState.Registered
+                enabled = currentState != RegisterScreenState.Registered,
+                errorMessage = nameError
             )
 
             Spacer(Modifier.height(20.dp))
@@ -189,13 +215,13 @@ fun RegisterScreen(
                 placeholder = stringResource(Res.string.email_placeholder),
                 value = email,
                 onValueChange = onEmailChange,
-                enabled = screenState != RegisterScreenState.Registered,
+                enabled = currentState != RegisterScreenState.Registered,
                 errorMessage = emailError
             )
 
             Spacer(Modifier.height(20.dp))
 
-            if (screenState != RegisterScreenState.Registered) {
+            if (currentState != RegisterScreenState.Registered) {
                 PasswordInput(
                     label = stringResource(Res.string.password_label),
                     placeholder = stringResource(Res.string.password_placeholder),
@@ -203,11 +229,12 @@ fun RegisterScreen(
                     isVisible = passwordVisible,
                     onValueChange = onPasswordChange,
                     onToggleVisibility = onTogglePasswordVisibility,
-                    enabled = true
+                    enabled = true,
+                    errorMessage = passwordError
                 )
             }
 
-            if (screenState == RegisterScreenState.Register) {
+            if (currentState == RegisterScreenState.Register) {
                 Spacer(Modifier.height(20.dp))
 
                 PasswordInput(
@@ -224,25 +251,38 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(32.dp))
 
-            when (screenState) {
+            when (currentState) {
                 RegisterScreenState.Register -> {
                     PrimaryButton(
                         text = stringResource(Res.string.register_button),
-                        onClick = onRegister,
-                        enabled = emailError == null && !isPasswordMismatch
+                        onClick = {
+                            showErrors = true
+                            if (isRegisterValid) {
+                                onRegister()
+                            }
+                        },
+                        enabled = true
                     )
                 }
                 RegisterScreenState.Login -> {
                     PrimaryButton(
                         text = stringResource(Res.string.login_button),
-                        onClick = onLogin,
-                        enabled = emailError == null
+                        onClick = {
+                            showErrors = true
+                            if (isLoginValid) {
+                                onLogin()
+                            }
+                        },
+                        enabled = true
                     )
                 }
                 RegisterScreenState.Registered -> {
                     PrimaryButton(
                         text = stringResource(Res.string.logout_button),
-                        onClick = onLogout,
+                        onClick = {
+                            showErrors = false
+                            onLogout()
+                        },
                         enabled = true
                     )
                 }
@@ -259,20 +299,43 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(24.dp))
 
-            Row {
-                Text(
-                    text = stringResource(Res.string.already_have_account),
-                    color = Color.White.copy(alpha = 0.6f)
-                )
-                Text(
-                    text = stringResource(Res.string.login_link),
-                    color = Color(0xFF4A8CFF),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable { onLogin() }
-                )
-            }
+            when (currentState) {
+                RegisterScreenState.Register -> {
+                    Row {
+                        Text(
+                            text = stringResource(Res.string.already_have_account),
+                            color = Color.White.copy(alpha = 0.6f)
+                        )
+                        Text(
+                            text = stringResource(Res.string.login_link),
+                            color = Color(0xFF4A8CFF),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable {
+                                showErrors = false
+                                currentState = RegisterScreenState.Login
+                            }
+                        )
+                    }
 
-            Spacer(Modifier.height(32.dp))
+                    Spacer(Modifier.height(32.dp))
+                }
+                RegisterScreenState.Login -> {
+                    Row {
+                        Text(
+                            text = stringResource(Res.string.register_button),
+                            color = Color(0xFF4A8CFF),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.clickable {
+                                showErrors = false
+                                currentState = RegisterScreenState.Register
+                            }
+                        )
+                    }
+
+                    Spacer(Modifier.height(32.dp))
+                }
+                RegisterScreenState.Registered -> Unit
+            }
         }
     }
 }

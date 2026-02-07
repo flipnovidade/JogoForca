@@ -56,6 +56,8 @@
     <string name="email_invalid_error">Enter a valid email.</string>
     <string name="email_exists_error">Email already registered.</string>
     <string name="passwords_mismatch_error">Passwords do not match.</string>
+    <string name="name_required_error">Name is required.</string>
+    <string name="password_required_error">Password is required.</string>
     <string name="profile_icon">👤➕</string>
     <string name="password_visible_icon">🙈</string>
     <string name="password_hidden_icon">👁️</string>
