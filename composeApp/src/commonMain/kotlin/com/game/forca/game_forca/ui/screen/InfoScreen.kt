@@ -28,38 +28,29 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.game.forca.game_forca.AppVersion
 import com.game.forca.game_forca.data.RankingItem
+import com.game.forca.game_forca.ui.viewmodel.InfoScreenViewModel
+import org.koin.compose.koinInject
+import com.game.forca.game_forca.ui.components.RegisterBackHandler
 
 @Composable
-fun InfoScreen(navController: NavHostController) {
-
-    val ranking: List<RankingItem> = listOf(
-        RankingItem(
-            position = 1,
-            name = "Alice",
-            score = 1500,
-            email = "alice@email.com"
-        ),
-        RankingItem(
-            position = 2,
-            name = "Bob",
-            score = 1200,
-            email = "bob@email.com"
-        ),
-        RankingItem(
-            position = 3,
-            name = "You",
-            score = 900,
-            email = "me@email.com"
-        )
-    )
-
-    val myEmail: String = "me@email.com"
+fun InfoScreen(
+    navController: NavHostController,
+    infoScreenViewModel: InfoScreenViewModel = koinInject<InfoScreenViewModel>()
+) {
+    val ranking = infoScreenViewModel.ranking
+    val myEmail = infoScreenViewModel.myEmail
 
     val onBack: () -> Unit = {
+        navController.popBackStack()
         println("Back pressed")
     }
 
+    RegisterBackHandler  {
+        navController.popBackStack()
+        println("OnBack pressed")
+    }
 
     Box(
         modifier = Modifier
@@ -90,7 +81,7 @@ fun InfoScreen(navController: NavHostController) {
             Spacer(Modifier.height(24.dp))
 
             SectionTitle("Detalhes do App", "ℹ️")
-            AppDetailsCard()
+            AppDetailsCard(infoScreenViewModel.appVersion)
 
             Spacer(Modifier.height(24.dp))
 
@@ -150,7 +141,7 @@ private fun RankingRow(
         PositionBadge(item.position)
 
         Text(
-            text = item.email,
+            text = "  " + item.email,
             color = if (highlight) Color(0xFF3B7CFF) else Color.White,
             modifier = Modifier.weight(1f)
         )
@@ -234,8 +225,9 @@ private fun CreditItem(
     Spacer(Modifier.height(16.dp))
 }
 
+
 @Composable
-fun AppDetailsCard() {
+fun AppDetailsCard(appVersion: AppVersion) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -243,7 +235,11 @@ fun AppDetailsCard() {
             .background(Color(0xFF121C3D))
             .padding(16.dp)
     ) {
-        DetailRow("Versão", "1.0.4 (Build 128)", trailing = "ATUALIZADO")
+        DetailRow(
+            "Versão",
+            "${appVersion.name} (Build ${appVersion.build})",
+            trailing = "ATUALIZADO"
+        )
         DetailRow("Desenvolvedor", "Lumina Studios Inc.")
         DetailRow("Privacidade", "Outubro 2023")
     }

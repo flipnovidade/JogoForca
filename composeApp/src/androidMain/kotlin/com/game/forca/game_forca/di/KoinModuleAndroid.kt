@@ -2,6 +2,7 @@ package com.game.forca.game_forca.di
 
 import android.annotation.SuppressLint
 import com.game.forca.game_forca.ui.viewmodel.GameScreenviewModel
+import com.game.forca.game_forca.ui.viewmodel.InfoScreenViewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -11,6 +12,7 @@ fun moduleAndroid() = module {
     //scope(named("gameScreenScope")) {
         //single<> { FirebaseRemoteConfigsBridge() }
         factory { GameScreenviewModel() }
+        factory { InfoScreenViewModel() }
     //}
 
 }

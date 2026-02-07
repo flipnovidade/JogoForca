@@ -73,6 +73,10 @@ android {
     namespace = "com.game.forca.game_forca"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.game.forca.flipsofts"
         minSdk = libs.versions.android.minSdk.get().toInt()
