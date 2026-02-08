@@ -1,6 +1,7 @@
 package com.game.forca.game_forca.ui.viewmodel
 
 import com.game.forca.game_forca.data.RegisterUserItem
+import com.game.forca.game_forca.data.RegisterUserLocalStore
 import com.game.forca.game_forca.data.RegisterUserRepository
 import com.game.forca.game_forca.ui.screen.RegisterScreenState
 import kotlinx.coroutines.launch
@@ -33,7 +34,8 @@ data class RegisterValidation(
 )
 
 class RegisterScreenViewModel(
-    private val registerUserRepository: RegisterUserRepository
+    private val registerUserRepository: RegisterUserRepository,
+    private val localStore: RegisterUserLocalStore
 ) : BaseViewModel() {
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState: StateFlow<RegisterUiState> = _uiState
@@ -77,15 +79,19 @@ class RegisterScreenViewModel(
         )
 
         viewModelScope.launch {
-            registerUserRepository.saveUser(user)
-            _uiState.update {
-                it.copy(
-                    screenState = RegisterScreenState.Registered,
-                    confirmPassword = it.password,
-                    showErrors = false
-                )
+            runCatching {
+                registerUserRepository.saveUser(user)
+            }.onSuccess {
+                localStore.saveUser(user)
+                _uiState.update {
+                    it.copy(
+                        screenState = RegisterScreenState.Registered,
+                        confirmPassword = it.password,
+                        showErrors = false
+                    )
+                }
+                updateValidation()
             }
-            updateValidation()
         }
     }
 

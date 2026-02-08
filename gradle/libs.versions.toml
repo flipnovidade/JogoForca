@@ -16,6 +16,7 @@ material3 = "1.10.0-alpha05"
 firebaseConfigKtx = "22.1.2"
 exifinterface = "1.4.2"
 gitliveFirebase = "1.13.0"
+androidxDatastore = "1.1.1"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -39,6 +40,7 @@ firebase-config-ktx = { group = "com.google.firebase", name = "firebase-config-k
 androidx-exifinterface = { group = "androidx.exifinterface", name = "exifinterface", version.ref = "exifinterface" }
 gitlive-firebase-app = { group = "dev.gitlive", name = "firebase-app", version.ref = "gitliveFirebase" }
 gitlive-firebase-database = { group = "dev.gitlive", name = "firebase-database", version.ref = "gitliveFirebase" }
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

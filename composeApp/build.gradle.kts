@@ -1,3 +1,4 @@
+import com.android.aaptcompiler.parseReference
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -48,6 +49,7 @@ kotlin {
             implementation("com.google.firebase:firebase-config:22.1.1")
             implementation("com.google.firebase:firebase-database:21.0.0")
             implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+            implementation(libs.androidx.datastore.preferences)
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -121,3 +123,8 @@ dependencies {
     debugImplementation(libs.compose.uiTooling)
 }
 
+ //1 testar add no firebase e salvar no preference
+ //2 deslogar limpar no preference apenas
+ //3 LOGAR VERIFICAR SE EH MESMA SENHA,
+ //4 Cada ponto atualizar o score local e do firebase
+ //5 ranking pega dos 5 que tema mais pontos

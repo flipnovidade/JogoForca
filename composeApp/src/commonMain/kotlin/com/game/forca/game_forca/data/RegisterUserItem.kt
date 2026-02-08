@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RegisterUserItem(
+    val idFirebase: String = "",
     val name: String = "",
     val email: String = "",
     val score: Int = 0,
