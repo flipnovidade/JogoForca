@@ -1,17 +1,15 @@
 package com.game.forca.game_forca.ui.viewmodel
 
+import com.game.forca.game_forca.data.RegisterLoginRepository
 import com.game.forca.game_forca.data.RegisterUserItem
 import com.game.forca.game_forca.data.RegisterUserLocalStore
 import com.game.forca.game_forca.data.RegisterUserRepository
 import com.game.forca.game_forca.ui.screen.RegisterScreenState
-import dev.gitlive.firebase.Firebase
-import dev.gitlive.firebase.database.database
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.first
 
 data class RegisterUiState(
     val screenState: RegisterScreenState = RegisterScreenState.Register,
@@ -38,7 +36,8 @@ data class RegisterValidation(
 
 class RegisterScreenViewModel(
     private val registerUserRepository: RegisterUserRepository,
-    private val localStore: RegisterUserLocalStore
+    private val localStore: RegisterUserLocalStore,
+    private val registerLoginRepository: RegisterLoginRepository
 ) : BaseViewModel() {
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState: StateFlow<RegisterUiState> = _uiState
@@ -84,7 +83,7 @@ class RegisterScreenViewModel(
                     email = _uiState.value.email.trim(),
                     score = localUser?.score ?: 0,
                     password = _uiState.value.password,
-                    keyForPush =  "lolocalUser?.keyForPush.orEmpty()"
+                    keyForPush = "localUser?.keyForPush.orEmpty() old"
                 )
                 val savedId = registerUserRepository.saveUser(requestUser)
                 requestUser.copy(idFirebase = savedId)
@@ -132,41 +131,37 @@ class RegisterScreenViewModel(
         }
 
         viewModelScope.launch {
-            val snapshot = Firebase.database.reference("users").valueEvents.first()
-            val matched = snapshot.children.firstOrNull { child ->
-                val user = child.value<RegisterUserItem>()
-                user.email.trim() == _uiState.value.email.trim() &&
-                    user.password == _uiState.value.password
-            }
-
-            val found = matched?.value<RegisterUserItem>()
-            if (matched == null || found == null) {
+            val found = registerLoginRepository.findByEmailPassword(
+                email = _uiState.value.email.trim(),
+                password = _uiState.value.password
+            )
+            if (found == null) {
                 _uiState.update { it.copy(showErrors = true) }
                 updateValidation()
                 return@launch
             }
 
             val savedUser = found.copy(
-                idFirebase = matched.key ?: "",
-                keyForPush = "localStore.getUser()?.keyForPush nova ",
+                idFirebase = found.idFirebase,
+                name = found.name,
+                password = found.name,
+                email = found.email,
+                keyForPush = "localUser?.keyForPush.orEmpty() nova",
                 score = 0
             )
 
-            Firebase.database.reference("users")
-                .child(savedUser.idFirebase)
-                .setValue(savedUser)
+            registerLoginRepository.updateUser(savedUser)
 
             localStore.saveUser(savedUser)
-
             localStore.saveGameProgress(0, 0)
 
             _uiState.update {
                 it.copy(
-                    name = savedUser.name,
-                    email = savedUser.email,
-                    password = savedUser.password,
+                    name = found.name,
+                    email = found.email,
+                    password = found.password,
                     screenState = RegisterScreenState.Registered,
-                    confirmPassword = savedUser.password,
+                    confirmPassword = found.password,
                     showErrors = false
                 )
             }

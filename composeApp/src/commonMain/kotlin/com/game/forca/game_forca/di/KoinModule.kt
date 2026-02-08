@@ -1,7 +1,9 @@
 package com.game.forca.game_forca.di
 
 import com.game.forca.game_forca.data.FirebaseRankingRepository
+import com.game.forca.game_forca.data.FirebaseRegisterLoginRepository
 import com.game.forca.game_forca.data.FirebaseRegisterUserRepository
+import com.game.forca.game_forca.data.RegisterLoginRepository
 import com.game.forca.game_forca.data.RankingRepository
 import com.game.forca.game_forca.data.RegisterUserLocalStore
 import com.game.forca.game_forca.data.RegisterUserRepository
@@ -12,8 +14,9 @@ import org.koin.dsl.module
 
 fun sharedModules() = module {
     single<RankingRepository> { FirebaseRankingRepository() }
+    single<RegisterLoginRepository> { FirebaseRegisterLoginRepository() }
     single<RegisterUserRepository> { FirebaseRegisterUserRepository() }
     factory { InfoScreenViewModel(get()) }
     factory { GameScreenviewModel(get()) }
-    factory { RegisterScreenViewModel(get(), get()) }
+    factory { RegisterScreenViewModel(get(), get(), get()) }
 }
