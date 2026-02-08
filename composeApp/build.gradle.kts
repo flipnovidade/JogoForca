@@ -123,7 +123,7 @@ dependencies {
     debugImplementation(libs.compose.uiTooling)
 }
 
- //1 testar add no firebase e salvar no preference
+ 
  //2 deslogar limpar no preference apenas
  //3 LOGAR VERIFICAR SE EH MESMA SENHA,
  //4 Cada ponto atualizar o score local e do firebase

@@ -76,18 +76,18 @@ class RegisterScreenViewModel(
                     RegisterUserItem(
                         name = _uiState.value.name,
                         email = _uiState.value.email.trim(),
-                        score = 999,
+                        score = localStore.getUser()?.score ?: 0,
                         password = _uiState.value.password,
-                        keyForPush = "kajfasjflkjsakl00009f0305njnwdo"
+                        keyForPush = localStore.getUser()?.keyForPush ?: ""
                     )
                 )
                 RegisterUserItem(
                     idFirebase = savedId,
                     name = _uiState.value.name,
                     email = _uiState.value.email.trim(),
-                    score = 999,
+                    score = localStore.getUser()?.score ?: 0,
                     password = _uiState.value.password,
-                    keyForPush = "kajfasjflkjsakl00009f0305njnwdo"
+                    keyForPush = localStore.getUser()?.keyForPush ?: ""
                 )
             }.onSuccess { it ->
                 localStore.saveUser(it)
