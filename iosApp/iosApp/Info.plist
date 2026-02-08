@@ -4,5 +4,7 @@
 <dict>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
+    <key>NSUserTrackingUsageDescription</key>
+    <string>We use tracking to provide personalized ads.</string>
 </dict>
 </plist>

@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.data.closeApp
+import com.game.forca.game_forca.data.requestTrackingAuthorization
 import com.game.forca.game_forca.interfaces.GameDialogAction
 import com.game.forca.game_forca.interfaces.GameEvent
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
@@ -159,6 +160,8 @@ fun GameScreen(
                 ?.remove<GameDialogAction>("victory_dialog_action")
         }
     }
+
+    requestTrackingAuthorization()
 
     val resultFlowGameOverDialog =
         navController.currentBackStackEntry
