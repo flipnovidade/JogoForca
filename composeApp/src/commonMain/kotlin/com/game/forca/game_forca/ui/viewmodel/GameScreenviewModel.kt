@@ -109,6 +109,16 @@ class GameScreenviewModel(
             _globalScore.update {
                 it + finalScore
             }
+
+            if (finalScore > 0) {
+                viewModelScope.launch {
+                    val localUser = localStore.getUser()
+                    if (localUser != null && isLoggedIn(localUser)) {
+                        val updatedUser = localUser.copy(score = localUser.score + finalScore)
+                        localStore.saveUser(updatedUser)
+                    }
+                }
+            }
         }
 
         if( (_positionStartedWord.value + 1) == 100 ){
