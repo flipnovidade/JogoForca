@@ -80,7 +80,7 @@ fun RegisterScreen(
     val validation by registerScreenViewModel.validation.collectAsState()
 
     LaunchedEffect(screenState) {
-        registerScreenViewModel.setScreenState(screenState)
+        //registerScreenViewModel.setScreenState(screenState)
     }
 
     val currentState = uiState.screenState

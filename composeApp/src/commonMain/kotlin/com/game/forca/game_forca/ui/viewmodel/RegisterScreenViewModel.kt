@@ -47,18 +47,20 @@ class RegisterScreenViewModel(
 
     init {
         viewModelScope.launch {
-            val user = localStore.getUser() ?: return@launch
-            _uiState.update {
-                it.copy(
-                    screenState = RegisterScreenState.Registered,
-                    name = user.name,
-                    email = user.email,
-                    password = user.password,
-                    confirmPassword = user.password,
-                    showErrors = false
-                )
+            val user = localStore.getUser()
+            if (user != null && isLoggedIn(user)) {
+                _uiState.update {
+                    it.copy(
+                        screenState = RegisterScreenState.Registered,
+                        name = user.name,
+                        email = user.email,
+                        password = user.password,
+                        confirmPassword = user.password,
+                        showErrors = false
+                    )
+                }
+                //updateValidation()
             }
-            updateValidation()
         }
     }
 
@@ -70,31 +72,36 @@ class RegisterScreenViewModel(
             return
         }
 
+        var savedId = ""
         viewModelScope.launch {
             runCatching {
-                val savedId = registerUserRepository.saveUser(
+                savedId = registerUserRepository.saveUser(
                     RegisterUserItem(
                         name = _uiState.value.name,
                         email = _uiState.value.email.trim(),
                         score = localStore.getUser()?.score ?: 0,
                         password = _uiState.value.password,
-                        keyForPush = localStore.getUser()?.keyForPush ?: ""
+                        keyForPush = "localStore.getUser()?.keyForPush ?: "
                     )
                 )
-                RegisterUserItem(
-                    idFirebase = savedId,
-                    name = _uiState.value.name,
-                    email = _uiState.value.email.trim(),
-                    score = localStore.getUser()?.score ?: 0,
-                    password = _uiState.value.password,
-                    keyForPush = localStore.getUser()?.keyForPush ?: ""
+            }.onSuccess { savedUser ->
+                localStore.saveUser(
+                        RegisterUserItem(
+                        name = _uiState.value.name,
+                        email = _uiState.value.email.trim(),
+                        score = localStore.getUser()?.score ?: 0,
+                        password = _uiState.value.password,
+                        idFirebase = savedId,
+                        keyForPush = "localStore.getUser()?.keyForPush ?: "
+                    )
                 )
-            }.onSuccess { it ->
-                localStore.saveUser(it)
                 _uiState.update {
                     it.copy(
+                        name = _uiState.value.name,
+                        email = _uiState.value.email,
+                        password = _uiState.value.password,
                         screenState = RegisterScreenState.Registered,
-                        confirmPassword = it.password,
+                        confirmPassword = _uiState.value.password,
                         showErrors = false
                     )
                 }
@@ -108,12 +115,25 @@ class RegisterScreenViewModel(
             localStore.clear()
             _uiState.update {
                 it.copy(
+                    name = "",
+                    email = "",
+                    password = "",
+                    confirmPassword = "",
+                    passwordVisible = false,
                     screenState = RegisterScreenState.Register,
                     showErrors = false
                 )
             }
             updateValidation()
         }
+    }
+
+    private fun isLoggedIn(user: RegisterUserItem): Boolean {
+        return user.idFirebase.isNotBlank() &&
+            user.name.isNotBlank() &&
+            user.email.isNotBlank() &&
+            user.password.isNotBlank() &&
+            user.keyForPush.isNotBlank()
     }
 
     fun setScreenState(state: RegisterScreenState) {
