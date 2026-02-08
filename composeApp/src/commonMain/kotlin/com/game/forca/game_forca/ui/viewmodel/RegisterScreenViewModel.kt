@@ -70,19 +70,27 @@ class RegisterScreenViewModel(
             return
         }
 
-        val user = RegisterUserItem(
-            name = _uiState.value.name,
-            email = _uiState.value.email.trim(),
-            score = 999,
-            password = _uiState.value.password,
-            keyForPush = "kajfasjflkjsakl00009f0305njnwdo"
-        )
-
         viewModelScope.launch {
             runCatching {
-                registerUserRepository.saveUser(user)
-            }.onSuccess {
-                localStore.saveUser(user)
+                val savedId = registerUserRepository.saveUser(
+                    RegisterUserItem(
+                        name = _uiState.value.name,
+                        email = _uiState.value.email.trim(),
+                        score = 999,
+                        password = _uiState.value.password,
+                        keyForPush = "kajfasjflkjsakl00009f0305njnwdo"
+                    )
+                )
+                RegisterUserItem(
+                    idFirebase = savedId,
+                    name = _uiState.value.name,
+                    email = _uiState.value.email.trim(),
+                    score = 999,
+                    password = _uiState.value.password,
+                    keyForPush = "kajfasjflkjsakl00009f0305njnwdo"
+                )
+            }.onSuccess { it ->
+                localStore.saveUser(it)
                 _uiState.update {
                     it.copy(
                         screenState = RegisterScreenState.Registered,

@@ -13,7 +13,9 @@ class FirebaseRegisterUserRepository : RegisterUserRepository {
         return firstChild.value<RegisterUserItem>()
     }
 
-    override suspend fun saveUser(user: RegisterUserItem) {
-        usersReference.push().setValue(user)
+    override suspend fun saveUser(registerUserItem: RegisterUserItem): String {
+        val newRef = usersReference.push()
+        newRef.setValue(registerUserItem)
+        return newRef.key.orEmpty()
     }
 }
