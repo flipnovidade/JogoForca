@@ -144,7 +144,7 @@ class RegisterScreenViewModel(
             val savedUser = found.copy(
                 idFirebase = found.idFirebase,
                 name = found.name,
-                password = found.name,
+                password = found.password,
                 email = found.email,
                 keyForPush = "localUser?.keyForPush.orEmpty() nova",
                 score = 0

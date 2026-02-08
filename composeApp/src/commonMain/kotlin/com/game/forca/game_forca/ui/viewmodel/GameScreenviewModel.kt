@@ -1,8 +1,10 @@
 package com.game.forca.game_forca.ui.viewmodel
 
 import com.game.forca.game_forca.data.GameState
+import com.game.forca.game_forca.data.RegisterLoginRepository
 import com.game.forca.game_forca.data.RegisterUserLocalStore
 import com.game.forca.game_forca.data.RegisterUserItem
+import com.game.forca.game_forca.data.RegisterUserRepository
 import com.game.forca.game_forca.data.WordItem
 import com.game.forca.game_forca.data.getSystemLocale
 import com.game.forca.game_forca.interfaces.GameEvent
@@ -20,7 +22,8 @@ import kotlin.Int
 import kotlin.String
 
 class GameScreenviewModel(
-    private val localStore: RegisterUserLocalStore
+    private val localStore: RegisterUserLocalStore,
+    private val registerLoginRepository: RegisterLoginRepository
 ) : BaseViewModel() {
 
     private var _globalScore = MutableStateFlow(0)
@@ -116,15 +119,26 @@ class GameScreenviewModel(
                 it + finalScore
             }
 
-            if (finalScore > 0) {
-                viewModelScope.launch {
-                    val localUser = localStore.getUser()
-                    if (localUser != null && isLoggedIn(localUser)) {
-                        val updatedUser = localUser.copy(score = localUser.score + finalScore)
-                        localStore.saveUser(updatedUser)
-                    }
+            viewModelScope.launch {
+                val localUser = localStore.getUser()
+                if (localUser != null && isLoggedIn(localUser)) {
+                    val updatedUser = localUser.copy(score = localUser.score + finalScore)
+                    localStore.saveUser(updatedUser)
+
+                    val savedUser = updatedUser.copy(
+                        idFirebase = updatedUser.idFirebase,
+                        name = updatedUser.name,
+                        password = updatedUser.password,
+                        email = updatedUser.email,
+                        keyForPush = updatedUser.keyForPush,
+                        score = localUser.score + finalScore
+                    )
+
+                    registerLoginRepository.updateUser(savedUser)
+
                 }
             }
+
         }
 
         if( (_positionStartedWord.value + 1) == 100 ){
