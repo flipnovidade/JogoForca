@@ -55,6 +55,12 @@ class GameScreenviewModel(
 
     init {
         viewModelScope.launch {
+            val savedProgress = localStore.getGameProgress()
+            if (savedProgress != null) {
+                _positionStartedWord.value = savedProgress.first
+                _numberFileWords.value = savedProgress.second
+            }
+
             val localUser = localStore.getUser()
             if (localUser != null && isLoggedIn(localUser)) {
                 _globalScore.value = localUser.score
@@ -134,6 +140,12 @@ class GameScreenviewModel(
         val nextIndex = (_positionStartedWord.value + 1) % _listWordItem.value.size
 
         _positionStartedWord.value = nextIndex
+        viewModelScope.launch {
+            localStore.saveGameProgress(
+                positionStartedWord = _positionStartedWord.value,
+                numberFileWords = _numberFileWords.value
+            )
+        }
 
         val wordItem = _listWordItem.value[nextIndex]
 
@@ -153,6 +165,13 @@ class GameScreenviewModel(
                 wrongLetters = emptySet(),
                 showErrorDialog = false,
                 showWinDialog = false
+            )
+        }
+
+        viewModelScope.launch {
+            localStore.saveGameProgress(
+                positionStartedWord = _positionStartedWord.value,
+                numberFileWords = _numberFileWords.value
             )
         }
     }
