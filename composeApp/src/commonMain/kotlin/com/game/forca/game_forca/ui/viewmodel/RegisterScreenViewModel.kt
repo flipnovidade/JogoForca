@@ -59,7 +59,7 @@ class RegisterScreenViewModel(
                         showErrors = false
                     )
                 }
-                //updateValidation()
+                updateValidation()
             }
         }
     }
@@ -72,36 +72,28 @@ class RegisterScreenViewModel(
             return
         }
 
-        var savedId = ""
         viewModelScope.launch {
             runCatching {
-                savedId = registerUserRepository.saveUser(
-                    RegisterUserItem(
-                        name = _uiState.value.name,
-                        email = _uiState.value.email.trim(),
-                        score = localStore.getUser()?.score ?: 0,
-                        password = _uiState.value.password,
-                        keyForPush = "localStore.getUser()?.keyForPush ?: "
-                    )
+                val localUser = localStore.getUser()
+                val requestUser = RegisterUserItem(
+                    idFirebase = localUser?.idFirebase.orEmpty(),
+                    name = _uiState.value.name,
+                    email = _uiState.value.email.trim(),
+                    score = localUser?.score ?: 0,
+                    password = _uiState.value.password,
+                    keyForPush = "localUser?.keyForPush.orEmpty()"
                 )
+                val savedId = registerUserRepository.saveUser(requestUser)
+                requestUser.copy(idFirebase = savedId)
             }.onSuccess { savedUser ->
-                localStore.saveUser(
-                        RegisterUserItem(
-                        name = _uiState.value.name,
-                        email = _uiState.value.email.trim(),
-                        score = localStore.getUser()?.score ?: 0,
-                        password = _uiState.value.password,
-                        idFirebase = savedId,
-                        keyForPush = "localStore.getUser()?.keyForPush ?: "
-                    )
-                )
+                localStore.saveUser(savedUser)
                 _uiState.update {
                     it.copy(
-                        name = _uiState.value.name,
-                        email = _uiState.value.email,
-                        password = _uiState.value.password,
+                        name = savedUser.name,
+                        email = savedUser.email,
+                        password = savedUser.password,
                         screenState = RegisterScreenState.Registered,
-                        confirmPassword = _uiState.value.password,
+                        confirmPassword = savedUser.password,
                         showErrors = false
                     )
                 }
