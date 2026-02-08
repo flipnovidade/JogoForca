@@ -17,7 +17,12 @@ class FirebaseRankingRepository : RankingRepository {
                     position = position,
                     keyPush = item.keyPush.ifBlank { (child.key ?: "") }
                 )
-            }.sortedBy { it.position }
+            }
+                .sortedByDescending { it.score }
+                .take(5)
+                .mapIndexed { rankIndex, item ->
+                    item.copy(position = rankIndex + 1)
+                }
         }
     }
 }
