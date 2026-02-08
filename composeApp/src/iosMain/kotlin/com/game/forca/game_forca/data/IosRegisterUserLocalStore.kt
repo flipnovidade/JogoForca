@@ -19,4 +19,8 @@ class IosRegisterUserLocalStore : RegisterUserLocalStore {
             json.decodeFromString(RegisterUserItem.serializer(), payload)
         }.getOrNull()
     }
+
+    override suspend fun clear() {
+        defaults.removeObjectForKey(userKey)
+    }
 }

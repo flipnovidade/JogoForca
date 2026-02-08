@@ -47,7 +47,7 @@ class RegisterScreenViewModel(
 
     init {
         viewModelScope.launch {
-            val user = registerUserRepository.fetchFirstUser() ?: return@launch
+            val user = localStore.getUser() ?: return@launch
             _uiState.update {
                 it.copy(
                     screenState = RegisterScreenState.Registered,
@@ -100,6 +100,19 @@ class RegisterScreenViewModel(
                 }
                 updateValidation()
             }
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch {
+            localStore.clear()
+            _uiState.update {
+                it.copy(
+                    screenState = RegisterScreenState.Register,
+                    showErrors = false
+                )
+            }
+            updateValidation()
         }
     }
 

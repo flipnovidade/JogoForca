@@ -123,8 +123,9 @@ dependencies {
     debugImplementation(libs.compose.uiTooling)
 }
 
- 
- //2 deslogar limpar no preference apenas
+
+
  //3 LOGAR VERIFICAR SE EH MESMA SENHA,
  //4 Cada ponto atualizar o score local e do firebase
  //5 ranking pega dos 5 que tema mais pontos
+ // 6 depois de criar o objeto com o code de push sempre atualizar o objeto

@@ -30,4 +30,10 @@ class AndroidRegisterUserLocalStore(
             json.decodeFromString(RegisterUserItem.serializer(), payload)
         }.getOrNull()
     }
+
+    override suspend fun clear() {
+        context.dataStore.edit { prefs ->
+            prefs.remove(userKey)
+        }
+    }
 }
