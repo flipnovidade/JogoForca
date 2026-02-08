@@ -97,8 +97,7 @@ fun RegisterScreen(
         null
     }
     val emailError = when {
-        validation.shouldValidateEmail && !validation.isEmailValid ->
-            stringResource(Res.string.email_invalid_error)
+        validation.shouldValidateEmail && !validation.isEmailValid -> stringResource(Res.string.email_invalid_error)
         currentState == RegisterScreenState.Register &&
             validation.shouldValidateEmail &&
             validation.isEmailTaken ->
@@ -126,9 +125,7 @@ fun RegisterScreen(
         navController.popBackStack()
         println("onBack")
     }
-    val onRegister: () -> Unit = {
-        println("onRegister")
-    }
+    val onRegister: () -> Unit = registerScreenViewModel::registerUser
     val onLogin: () -> Unit = {
         println("onLogin")
     }
@@ -137,7 +134,7 @@ fun RegisterScreen(
     }
 
     RegisterBackHandler  {
-        onRegister
+        onBack
     }
 
     Box(
@@ -210,16 +207,18 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            PasswordInput(
-                label = stringResource(Res.string.password_label),
-                placeholder = stringResource(Res.string.password_placeholder),
-                value = password,
-                isVisible = passwordVisible,
-                onValueChange = onPasswordChange,
-                onToggleVisibility = onTogglePasswordVisibility,
-                enabled = currentState != RegisterScreenState.Registered,
-                errorMessage = passwordError
-            )
+            if (currentState != RegisterScreenState.Registered) {
+                PasswordInput(
+                    label = stringResource(Res.string.password_label),
+                    placeholder = stringResource(Res.string.password_placeholder),
+                    value = password,
+                    isVisible = passwordVisible,
+                    onValueChange = onPasswordChange,
+                    onToggleVisibility = onTogglePasswordVisibility,
+                    enabled = true,
+                    errorMessage = passwordError
+                )
+            }
 
             if (currentState == RegisterScreenState.Register) {
                 Spacer(Modifier.height(20.dp))

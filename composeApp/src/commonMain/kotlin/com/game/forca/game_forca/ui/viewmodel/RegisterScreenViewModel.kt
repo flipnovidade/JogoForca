@@ -1,5 +1,6 @@
 package com.game.forca.game_forca.ui.viewmodel
 
+import com.game.forca.game_forca.data.RegisterUserItem
 import com.game.forca.game_forca.data.RegisterUserRepository
 import com.game.forca.game_forca.ui.screen.RegisterScreenState
 import kotlinx.coroutines.launch
@@ -59,6 +60,35 @@ class RegisterScreenViewModel(
         }
     }
 
+    fun registerUser() {
+        val currentValidation = _validation.value
+        if (!currentValidation.isRegisterValid) {
+            _uiState.update { it.copy(showErrors = true) }
+            updateValidation()
+            return
+        }
+
+        val user = RegisterUserItem(
+            name = _uiState.value.name,
+            email = _uiState.value.email.trim(),
+            score = 999,
+            password = _uiState.value.password,
+            keyForPush = "kajfasjflkjsakl00009f0305njnwdo"
+        )
+
+        viewModelScope.launch {
+            registerUserRepository.saveUser(user)
+            _uiState.update {
+                it.copy(
+                    screenState = RegisterScreenState.Registered,
+                    confirmPassword = it.password,
+                    showErrors = false
+                )
+            }
+            updateValidation()
+        }
+    }
+
     fun setScreenState(state: RegisterScreenState) {
         _uiState.update { it.copy(screenState = state, showErrors = false) }
         updateValidation()
@@ -95,8 +125,9 @@ class RegisterScreenViewModel(
 
     private fun updateValidation() {
         val state = _uiState.value
+        val normalizedEmail = state.email.trim()
         val isNameValid = state.name.isNotBlank()
-        val isEmailValid = emailRegex.matches(state.email)
+        val isEmailValid = emailRegex.matches(normalizedEmail)
         val isEmailTaken = false
         val isPasswordValid = state.password.isNotBlank()
         val isPasswordMismatch =

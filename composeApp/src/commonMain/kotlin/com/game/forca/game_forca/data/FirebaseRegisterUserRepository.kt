@@ -12,4 +12,8 @@ class FirebaseRegisterUserRepository : RegisterUserRepository {
         val firstChild = snapshot.children.firstOrNull() ?: return null
         return firstChild.value<RegisterUserItem>()
     }
+
+    override suspend fun saveUser(user: RegisterUserItem) {
+        usersReference.push().setValue(user)
+    }
 }
