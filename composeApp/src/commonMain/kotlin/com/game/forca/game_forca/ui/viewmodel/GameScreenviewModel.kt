@@ -1,6 +1,8 @@
 package com.game.forca.game_forca.ui.viewmodel
 
 import com.game.forca.game_forca.data.GameState
+import com.game.forca.game_forca.data.RegisterUserLocalStore
+import com.game.forca.game_forca.data.RegisterUserItem
 import com.game.forca.game_forca.data.WordItem
 import com.game.forca.game_forca.data.getSystemLocale
 import com.game.forca.game_forca.interfaces.GameEvent
@@ -17,9 +19,11 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.Int
 import kotlin.String
 
-class GameScreenviewModel: BaseViewModel() {
+class GameScreenviewModel(
+    private val localStore: RegisterUserLocalStore
+) : BaseViewModel() {
 
-    private var _globalScore = MutableStateFlow(100)
+    private var _globalScore = MutableStateFlow(0)
     val globalScore : StateFlow<Int> = _globalScore
 
     private var _positionStartedWord = MutableStateFlow(0)
@@ -51,6 +55,11 @@ class GameScreenviewModel: BaseViewModel() {
 
     init {
         viewModelScope.launch {
+            val localUser = localStore.getUser()
+            if (localUser != null && isLoggedIn(localUser)) {
+                _globalScore.value = localUser.score
+            }
+
             val myNewList = loadWords()
             _listWordItem.update { list ->
                 myNewList
@@ -75,6 +84,14 @@ class GameScreenviewModel: BaseViewModel() {
                 )
             }
         }
+    }
+
+    private fun isLoggedIn(user: RegisterUserItem): Boolean {
+        return user.idFirebase.isNotBlank() &&
+            user.name.isNotBlank() &&
+            user.email.isNotBlank() &&
+            user.password.isNotBlank() &&
+            user.keyForPush.isNotBlank()
     }
 
     suspend fun getNextWord() {
