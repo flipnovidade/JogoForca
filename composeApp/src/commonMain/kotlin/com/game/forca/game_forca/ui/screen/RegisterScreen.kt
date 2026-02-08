@@ -126,9 +126,7 @@ fun RegisterScreen(
         println("onBack")
     }
     val onRegister: () -> Unit = registerScreenViewModel::registerUser
-    val onLogin: () -> Unit = {
-        println("onLogin")
-    }
+    val onLogin: () -> Unit = registerScreenViewModel::loginUser
     val onLogout: () -> Unit = registerScreenViewModel::logout
 
     RegisterBackHandler  {
@@ -183,16 +181,18 @@ fun RegisterScreen(
 
             Spacer(Modifier.height(32.dp))
 
-            LabeledInput(
-                label = stringResource(Res.string.full_name_label),
-                placeholder = stringResource(Res.string.full_name_placeholder),
-                value = name,
-                onValueChange = onNameChange,
-                enabled = currentState != RegisterScreenState.Registered,
-                errorMessage = nameError
-            )
+            if (currentState != RegisterScreenState.Login) {
+                LabeledInput(
+                    label = stringResource(Res.string.full_name_label),
+                    placeholder = stringResource(Res.string.full_name_placeholder),
+                    value = name,
+                    onValueChange = onNameChange,
+                    enabled = currentState != RegisterScreenState.Registered,
+                    errorMessage = nameError
+                )
 
-            Spacer(Modifier.height(20.dp))
+                Spacer(Modifier.height(20.dp))
+            }
 
             LabeledInput(
                 label = stringResource(Res.string.email_label),
