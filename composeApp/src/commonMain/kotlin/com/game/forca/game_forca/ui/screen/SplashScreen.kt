@@ -72,9 +72,9 @@ fun SplashRoute(
 
             // Navegação com flags para evitar duplicação
             navController.navigate("gameForcaScreen") {
-                //popUpTo("splashScreen") {
-                  //  inclusive = true
-                //}
+                popUpTo("splashScreen") {
+                    inclusive = true
+                }
                 popUpTo(0)
                 launchSingleTop = true
 

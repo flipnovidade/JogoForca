@@ -124,7 +124,7 @@ fun GameScreen(
             when (action) {
                 GameDialogAction.RETRY,-> {
                     gameScreenviewModel.onLoginRequired()
-                    navController.navigate("infoScreen")
+
                 }
                 GameDialogAction.NEXT_WORD,
                 GameDialogAction.BACK_TO_MENU,
@@ -260,7 +260,9 @@ fun GameScreen(
         gameScreenviewModel.onEvent(GameEvent.OpenHint)
     }
     val goToInfoScreenRanking: () -> Unit = {
-        navController.navigate("infoScreen")
+        navController.navigate("infoScreen"){
+            //restoreState = true
+        }
     }
 
     val goToRegisterScreen: () -> Unit = {
@@ -277,7 +279,7 @@ fun GameScreen(
     }
 
     RegisterBackHandler  {
-       onClose
+       onClose()
     }
 
     Box(
@@ -367,12 +369,6 @@ fun GameScreen(
                 }
             }
 
-            /*
-            PrimaryButtonScreen(
-                text = "Próxima Letra",
-                onClick = onNextLetter
-            )
-             */
         }
     }
 }

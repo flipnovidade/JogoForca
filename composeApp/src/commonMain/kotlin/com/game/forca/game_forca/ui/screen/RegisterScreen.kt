@@ -130,7 +130,7 @@ fun RegisterScreen(
     val onLogout: () -> Unit = registerScreenViewModel::logout
 
     RegisterBackHandler  {
-        onBack
+        onBack()
     }
 
     Box(

@@ -52,7 +52,7 @@ fun InfoScreen(
     }
 
     RegisterBackHandler  {
-        onBack
+        onBack()
     }
 
     Box(

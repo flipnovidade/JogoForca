@@ -40,13 +40,14 @@ fun MakeLoginDialogRoute(
     MakeLogin(
         onGoToLogin = {
             sendResult(navController, GameDialogAction.RETRY)
-        }
+        }, navController = navController,
     )
 }
 
 @Composable
 fun MakeLogin(
-    onGoToLogin: () -> Unit
+    onGoToLogin: () -> Unit,
+    navController: NavHostController,
 ) {
 
     Box(
@@ -54,7 +55,10 @@ fun MakeLogin(
             .clickable(
                 indication = null,
                 interactionSource = remember { MutableInteractionSource() }
-            ) { onGoToLogin() },
+            ) {
+                onGoToLogin()
+                navController.navigate("registerScreen")
+              },
         contentAlignment = Alignment.Center
     ) {
 
@@ -128,11 +132,12 @@ fun MakeLogin(
             // Botão principal
             PrimaryButtonDialog(
                 text = stringResource(Res.string.make_login_dialog_btn ),
-                onClick = onGoToLogin
+                onClick = {
+                    onGoToLogin()
+                    navController.navigate("registerScreen")
+                }
             )
-
             Spacer(Modifier.height(12.dp))
-
         }
     }
 }

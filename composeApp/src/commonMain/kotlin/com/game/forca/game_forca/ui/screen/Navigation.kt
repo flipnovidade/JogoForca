@@ -1,5 +1,8 @@
 package com.game.forca.game_forca.ui.screen
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
@@ -17,7 +20,13 @@ import com.game.forca.game_forca.ui.dialog.VictoryDialogRoute
 
 @Composable
 fun AppNavigation(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "splashScreen") {
+    NavHost(
+        navController = navController, 
+        startDestination = "splashScreen", 
+        enterTransition = { fadeIn(animationSpec = tween(0)) },
+        exitTransition = { fadeOut(animationSpec = tween(0)) },
+        popEnterTransition = { fadeIn(animationSpec = tween(0)) },
+        popExitTransition = { fadeOut(animationSpec = tween(0)) } ) {
 
         composable(route = "splashScreen") {
             SplashRoute(navController)
