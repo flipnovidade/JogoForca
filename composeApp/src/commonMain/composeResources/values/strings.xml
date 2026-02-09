@@ -22,6 +22,7 @@
     <string name="ranking_header_position">POSITION</string>
     <string name="ranking_header_email">EMAIL</string>
     <string name="ranking_header_points">POINTS</string>
+    <string name="ranking_email_display">  %1$s</string>
     <string name="app_details_version_label">Version</string>
     <string name="app_details_updated_badge">UPDATED</string>
     <string name="app_details_developer_label">Developer</string>

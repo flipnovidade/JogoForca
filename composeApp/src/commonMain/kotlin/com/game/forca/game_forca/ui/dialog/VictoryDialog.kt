@@ -27,6 +27,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.interfaces.GameDialogAction
+import com.game.forca.game_forca.resources.Res
+import com.game.forca.game_forca.resources.back_to_menu_button
+import com.game.forca.game_forca.resources.next_word_button
+import com.game.forca.game_forca.resources.points_accumulated
+import com.game.forca.game_forca.resources.star_icon
+import com.game.forca.game_forca.resources.victory_icon
+import com.game.forca.game_forca.resources.victory_title
+import com.game.forca.game_forca.resources.word_was_label
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun VictoryDialogRoute(
@@ -95,7 +104,7 @@ fun VictoryDialog(
 
             // Troféu
             Text(
-                text = "🏆",
+                text = stringResource(Res.string.victory_icon),
                 fontSize = 56.sp
             )
 
@@ -103,7 +112,7 @@ fun VictoryDialog(
 
             // Título
             Text(
-                text = "Parabéns! Você acertou!",
+                text = stringResource(Res.string.victory_title),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -122,7 +131,7 @@ fun VictoryDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "A PALAVRA ERA:",
+                    text = stringResource(Res.string.word_was_label),
                     fontSize = 12.sp,
                     letterSpacing = 2.sp,
                     color = Color(0xFF3B7CFF)
@@ -145,10 +154,10 @@ fun VictoryDialog(
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text("⭐", fontSize = 18.sp)
+                Text(stringResource(Res.string.star_icon), fontSize = 18.sp)
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "+$points pontos acumulados",
+                    text = stringResource(Res.string.points_accumulated, points),
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 16.sp
                 )
@@ -158,7 +167,7 @@ fun VictoryDialog(
 
             // Botão principal
             PrimaryButtonDialog(
-                text = "Próxima Palavra  →",
+                text = stringResource(Res.string.next_word_button),
                 onClick = onNextWord
             )
 
@@ -166,7 +175,7 @@ fun VictoryDialog(
 
             // Botão secundário
             SecondaryButton(
-                text = "Voltar ao Menu",
+                text = stringResource(Res.string.back_to_menu_button),
                 onClick = onBackToMenu
             )
         }

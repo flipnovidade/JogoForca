@@ -27,6 +27,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.interfaces.GameDialogAction
+import com.game.forca.game_forca.resources.Res
+import com.game.forca.game_forca.resources.hint_dialog_button
+import com.game.forca.game_forca.resources.hint_dialog_image_icon
+import com.game.forca.game_forca.resources.hint_dialog_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun HintDialogRoute(
@@ -107,7 +112,7 @@ fun HintDialog(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "🏆",
+                    text = stringResource(Res.string.hint_dialog_image_icon),
                     fontSize = 48.sp
                 )
             }
@@ -116,7 +121,7 @@ fun HintDialog(
 
             // Título
             Text(
-                text = "DICA",
+                text = stringResource(Res.string.hint_dialog_title),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -147,7 +152,7 @@ fun HintDialog(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Entendi",
+                    text = stringResource(Res.string.hint_dialog_button),
                     color = Color.White,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold

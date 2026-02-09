@@ -31,12 +31,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import com.game.forca.game_forca.resources.Res
+import com.game.forca.game_forca.resources.splash_icon
+import com.game.forca.game_forca.resources.splash_initializing
+import com.game.forca.game_forca.resources.splash_tagline
+import com.game.forca.game_forca.resources.splash_title_main
+import com.game.forca.game_forca.resources.splash_title_pro
 import com.game.forca.game_forca.theme.DarkBlueBottom
 import com.game.forca.game_forca.theme.DarkBlueMid
 import com.game.forca.game_forca.theme.DarkBlueTop
 import com.game.forca.game_forca.theme.PrimaryBlue
 import com.game.forca.game_forca.theme.PrimaryBlueDark
 import kotlinx.coroutines.delay
+import org.jetbrains.compose.resources.stringResource
 
 
 @Composable
@@ -131,7 +138,7 @@ fun SplashScreen(
             ) {
                 // Placeholder multiplataforma
                 Text(
-                    text = "🔍",
+                    text = stringResource(Res.string.splash_icon),
                     fontSize = 36.sp
                 )
             }
@@ -141,13 +148,13 @@ fun SplashScreen(
             // Título
             Row {
                 Text(
-                    text = "Hangman ",
+                    text = stringResource(Res.string.splash_title_main),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
                 Text(
-                    text = "Pro",
+                    text = stringResource(Res.string.splash_title_pro),
                     fontSize = 28.sp,
                     fontWeight = FontWeight.Bold,
                     color = PrimaryBlue
@@ -157,7 +164,7 @@ fun SplashScreen(
             Spacer(Modifier.height(8.dp))
 
             Text(
-                text = "MASTER THE MYSTERY",
+                text = stringResource(Res.string.splash_tagline),
                 fontSize = 12.sp,
                 letterSpacing = 2.sp,
                 color = Color.White.copy(alpha = 0.6f)
@@ -173,7 +180,7 @@ fun SplashScreen(
         ) {
 
             Text(
-                text = "INITIALIZING GAME ENGINE",
+                text = stringResource(Res.string.splash_initializing),
                 fontSize = 12.sp,
                 color = Color.White.copy(alpha = 0.6f)
             )

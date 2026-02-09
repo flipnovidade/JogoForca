@@ -46,11 +46,17 @@ import com.game.forca.game_forca.data.closeApp
 import com.game.forca.game_forca.data.requestTrackingAuthorization
 import com.game.forca.game_forca.interfaces.GameDialogAction
 import com.game.forca.game_forca.interfaces.GameEvent
+import com.game.forca.game_forca.resources.Res
+import com.game.forca.game_forca.resources.category_label
+import com.game.forca.game_forca.resources.hint_button_icon
+import com.game.forca.game_forca.resources.hint_button_label
+import com.game.forca.game_forca.resources.wrong_letters_label
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
 import com.game.forca.game_forca.ui.dialog.GameOverDialog
 import com.game.forca.game_forca.ui.dialog.VictoryDialog
 import com.game.forca.game_forca.ui.viewmodel.GameScreenviewModel
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.resources.stringResource
 
 import org.koin.compose.koinInject
 
@@ -394,7 +400,7 @@ private fun TopBar(
 
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(
-                    text = "CATEGORY",
+                    text = stringResource(Res.string.category_label),
                     fontSize = 12.sp,
                     color = Color.White.copy(alpha = 0.6f),
                     letterSpacing = 2.sp
@@ -511,7 +517,7 @@ private fun WrongLetters(letters: Set<Char>) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
 
         Text(
-            text = "LETRAS ERRADAS",
+            text = stringResource(Res.string.wrong_letters_label),
             color = Color.White.copy(alpha = 0.6f),
             fontSize = 12.sp,
             letterSpacing = 2.sp
@@ -599,11 +605,11 @@ fun HintButton(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
-                text = "💡",
+                text = stringResource(Res.string.hint_button_icon),
                 fontSize = 16.sp
             )
             Text(
-                text = "HINT",
+                text = stringResource(Res.string.hint_button_label),
                 fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White

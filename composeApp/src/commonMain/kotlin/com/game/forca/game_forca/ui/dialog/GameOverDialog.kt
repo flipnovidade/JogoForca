@@ -32,7 +32,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.interfaces.GameDialogAction
+import com.game.forca.game_forca.resources.Res
+import com.game.forca.game_forca.resources.correct_word_label
+import com.game.forca.game_forca.resources.game_over_icon
+import com.game.forca.game_forca.resources.game_over_subtitle
+import com.game.forca.game_forca.resources.game_over_title
+import com.game.forca.game_forca.resources.main_menu_button
+import com.game.forca.game_forca.resources.try_again_button
 import com.game.forca.game_forca.ui.screen.PrimaryButton
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun GameOverDialogRoute(
@@ -111,14 +119,14 @@ fun GameOverDialog(
                     .background(Color(0xFFFF4D4D)),
                 contentAlignment = Alignment.Center
             ) {
-                Text("😵", fontSize = 42.sp)
+                Text(stringResource(Res.string.game_over_icon), fontSize = 42.sp)
             }
 
             Spacer(Modifier.height(20.dp))
 
             // Título
             Text(
-                text = "Que pena! Você perdeu.",
+                text = stringResource(Res.string.game_over_title),
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
@@ -128,7 +136,7 @@ fun GameOverDialog(
             Spacer(Modifier.height(6.dp))
 
             Text(
-                text = "FIM DE JOGO",
+                text = stringResource(Res.string.game_over_subtitle),
                 fontSize = 12.sp,
                 letterSpacing = 2.sp,
                 color = Color.White.copy(alpha = 0.6f)
@@ -147,7 +155,7 @@ fun GameOverDialog(
             ) {
 
                 Text(
-                    text = "A PALAVRA CORRETA ERA",
+                    text = stringResource(Res.string.correct_word_label),
                     fontSize = 12.sp,
                     letterSpacing = 2.sp,
                     color = Color.White.copy(alpha = 0.6f)
@@ -183,7 +191,7 @@ fun GameOverDialog(
 
             // Botão principal
             PrimaryButton(
-                text = "↺  Tentar Novamente",
+                text = stringResource(Res.string.try_again_button),
                 onClick = onRetry
             )
 
@@ -202,7 +210,7 @@ fun GameOverDialog(
                 Text("🏠", fontSize = 18.sp)
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = "Menu Principal",
+                    text = stringResource(Res.string.main_menu_button),
                     color = Color.White.copy(alpha = 0.8f),
                     fontSize = 16.sp
                 )
