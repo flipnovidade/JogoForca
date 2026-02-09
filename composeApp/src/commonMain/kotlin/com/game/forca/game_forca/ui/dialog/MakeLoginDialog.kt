@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.Key.Companion.R
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -27,9 +26,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.interfaces.GameDialogAction
 import org.jetbrains.compose.resources.stringResource
-import com.game.forca.game_forca.resources.Res.string
 import com.game.forca.game_forca.resources.Res
 import com.game.forca.game_forca.resources.make_login_dialog_btn
+import com.game.forca.game_forca.resources.make_login_dialog_icon
 import com.game.forca.game_forca.resources.make_login_dialog_message
 import com.game.forca.game_forca.resources.make_login_dialog_text
 
@@ -91,7 +90,7 @@ fun MakeLogin(
 
             // Troféu
             Text(
-                text = "\uD83D\uDC64\uD83D\uDD12",
+                text = stringResource(Res.string.make_login_dialog_icon),
                 fontSize = 56.sp
             )
 
