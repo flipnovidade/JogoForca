@@ -85,4 +85,7 @@
     <string name="hint_dialog_image_icon">🏆</string>
     <string name="hint_dialog_title">DICA</string>
     <string name="hint_dialog_button">Entendi</string>
+    <string name="make_login_dialog_message">Para continuar jogando e concorrer a prêmios</string>
+    <string name="make_login_dialog_text">FAÇA LOGIN OU CADASTRE-SE!</string>
+    <string name="make_login_dialog_btn">Aproveitar  →</string>
 </resources>

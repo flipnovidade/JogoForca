@@ -77,13 +77,20 @@ fun GameScreen(
 
     LaunchedEffect(currentRoute) {
         println("📍 Rota mudou para: $currentRoute")
-        //debugNavStack(navController)
     }
 
     LaunchedEffect(Unit) {
         println("Pilha atual:")
         backStackEntries.forEachIndexed { i, entry ->
             println("[$i] ${entry.destination.route}")
+        }
+    }
+
+    val openDialogMakeLogin by gameScreenviewModel.openDialogMakeLogin.collectAsState()
+
+    LaunchedEffect(openDialogMakeLogin) {
+        if (openDialogMakeLogin) {
+            navController.navigate("makelogin")
         }
     }
 
@@ -104,6 +111,35 @@ fun GameScreen(
             navController.navigate("gameOver/${state.word}/${gameScreenviewModel.globalScore.value}")
         }
     }
+
+    val resultFlowMakeLoginDialog =
+        navController.currentBackStackEntry
+            ?.savedStateHandle
+            ?.getStateFlow<GameDialogAction?>(
+                "make_login_dialog_action",
+                null
+            )
+    LaunchedEffect(resultFlowMakeLoginDialog) {
+        resultFlowMakeLoginDialog?.collect { action ->
+            when (action) {
+                GameDialogAction.RETRY,-> {
+                    gameScreenviewModel.onLoginRequired()
+                    navController.navigate("infoScreen")
+                }
+                GameDialogAction.NEXT_WORD,
+                GameDialogAction.BACK_TO_MENU,
+                GameDialogAction.DISMISS,
+                null -> {
+                    println("null")
+                }
+            }
+
+            navController.currentBackStackEntry
+                ?.savedStateHandle
+                ?.remove<GameDialogAction>("make_login_dialog_action")
+        }
+    }
+
 
     val resultFlowHintDialog =
         navController.currentBackStackEntry

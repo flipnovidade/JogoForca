@@ -56,6 +56,9 @@ class GameScreenviewModel(
     private val _numberFileWords = MutableStateFlow<Int>(0)
     val numberFileWords: StateFlow<Int> = _numberFileWords
 
+    private val _openDialogMakeLogin = MutableStateFlow<Boolean>(false)
+    val openDialogMakeLogin: StateFlow<Boolean> = _openDialogMakeLogin
+
     init {
         viewModelScope.launch {
             val savedProgress = localStore.getGameProgress()
@@ -95,6 +98,12 @@ class GameScreenviewModel(
         }
     }
 
+    fun onLoginRequired() {
+        _openDialogMakeLogin.update {
+            false
+        }
+    }
+
     private fun isLoggedIn(user: RegisterUserItem): Boolean {
         return user.idFirebase.isNotBlank() &&
             user.name.isNotBlank() &&
@@ -106,7 +115,7 @@ class GameScreenviewModel(
     suspend fun getNextWord() {
 
         val newWrongLetters = state.value.wrongLetters
-
+        val localUser = localStore.getUser()
         if (newWrongLetters.size < state.value.maxErrors) {
             val basePoints = 5
             val errorPenalty = state.value.wrongLetters.size * 1
@@ -120,7 +129,7 @@ class GameScreenviewModel(
             }
 
             viewModelScope.launch {
-                val localUser = localStore.getUser()
+
                 if (localUser != null && isLoggedIn(localUser)) {
                     val updatedUser = localUser.copy(score = localUser.score + finalScore)
                     localStore.saveUser(updatedUser)
@@ -139,6 +148,16 @@ class GameScreenviewModel(
                 }
             }
 
+        }
+
+        if (localUser != null && isLoggedIn(localUser)) {
+
+        }else{
+            if (positionStartedWord.value % 2 == 0) {
+                _openDialogMakeLogin.update {
+                    true
+                }
+            }
         }
 
         if( (_positionStartedWord.value + 1) == 100 ){

@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.game.forca.game_forca.ui.dialog.GameOverDialog
 import com.game.forca.game_forca.ui.dialog.GameOverDialogRoute
 import com.game.forca.game_forca.ui.dialog.HintDialogRoute
+import com.game.forca.game_forca.ui.dialog.MakeLoginDialogRoute
 import com.game.forca.game_forca.ui.dialog.VictoryDialog
 import com.game.forca.game_forca.ui.dialog.VictoryDialogRoute
 
@@ -78,6 +79,11 @@ fun AppNavigation(navController: NavHostController) {
             val assay = backStackEntry.savedStateHandle.get<String>("assay") ?: ""
 
             HintDialogRoute(navController = navController, assay = assay)
+        }
+
+        dialog("makelogin"
+        ) { _ ->
+            MakeLoginDialogRoute(navController = navController)
         }
 
     }

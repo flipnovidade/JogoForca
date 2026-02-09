@@ -85,4 +85,7 @@
     <string name="hint_dialog_image_icon">🏆</string>
     <string name="hint_dialog_title">HINT</string>
     <string name="hint_dialog_button">Got it</string>
+    <string name="make_login_dialog_message">To continue playing and compete for prizes</string>
+    <string name="make_login_dialog_text">SIGN IN OR REGISTER!</string>
+    <string name="make_login_dialog_btn">Enjoy  →</string>
 </resources>

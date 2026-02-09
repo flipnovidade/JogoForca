@@ -71,6 +71,7 @@ kotlin {
             implementation(libs.gitlive.firebase.app)
             implementation(libs.gitlive.firebase.database)
 
+
         }
         iosMain.dependencies {
 
@@ -81,7 +82,7 @@ kotlin {
 
 compose.resources {
     nameOfResClass = "Res"
-    publicResClass = false
+    publicResClass = true
     packageOfResClass = "com.game.forca.game_forca.resources"
     generateResClass = auto
 }
