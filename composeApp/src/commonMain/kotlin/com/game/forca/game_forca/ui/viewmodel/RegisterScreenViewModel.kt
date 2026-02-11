@@ -1,9 +1,9 @@
 package com.game.forca.game_forca.ui.viewmodel
 
-import com.game.forca.game_forca.data.RegisterLoginRepository
+import com.game.forca.game_forca.data.FirebaseInterRegisterLoginRepository
 import com.game.forca.game_forca.data.RegisterUserItem
 import com.game.forca.game_forca.data.RegisterUserLocalStore
-import com.game.forca.game_forca.data.RegisterUserRepository
+import com.game.forca.game_forca.data.FirebaseInterRegisterUserRepository
 import com.game.forca.game_forca.ui.screen.RegisterScreenState
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,9 +35,9 @@ data class RegisterValidation(
 )
 
 class RegisterScreenViewModel(
-    private val registerUserRepository: RegisterUserRepository,
+    private val firebaseInterRegisterUserRepository: FirebaseInterRegisterUserRepository,
     private val localStore: RegisterUserLocalStore,
-    private val registerLoginRepository: RegisterLoginRepository
+    private val firebaseInterRegisterLoginRepository: FirebaseInterRegisterLoginRepository
 ) : BaseViewModel() {
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState: StateFlow<RegisterUiState> = _uiState
@@ -85,7 +85,7 @@ class RegisterScreenViewModel(
                     password = _uiState.value.password,
                     keyForPush = "localUser?.keyForPush.orEmpty() old"
                 )
-                val savedId = registerUserRepository.saveUser(requestUser)
+                val savedId = firebaseInterRegisterUserRepository.saveUser(requestUser)
                 requestUser.copy(idFirebase = savedId)
             }.onSuccess { savedUser ->
                 localStore.saveUser(savedUser)
@@ -131,7 +131,7 @@ class RegisterScreenViewModel(
         }
 
         viewModelScope.launch {
-            val found = registerLoginRepository.findByEmailPassword(
+            val found = firebaseInterRegisterLoginRepository.findByEmailPassword(
                 email = _uiState.value.email.trim(),
                 password = _uiState.value.password
             )
@@ -150,7 +150,7 @@ class RegisterScreenViewModel(
                 score = 0
             )
 
-            registerLoginRepository.updateUser(savedUser)
+            firebaseInterRegisterLoginRepository.updateUser(savedUser)
 
             localStore.saveUser(savedUser)
             localStore.saveGameProgress(0, 0)

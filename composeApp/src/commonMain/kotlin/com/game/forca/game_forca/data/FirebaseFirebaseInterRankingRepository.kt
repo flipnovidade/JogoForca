@@ -5,7 +5,7 @@ import dev.gitlive.firebase.database.database
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-class FirebaseRankingRepository : RankingRepository {
+class FirebaseFirebaseInterRankingRepository : FirebaseInterRankingRepository {
     private val rankingReference = Firebase.database.reference("users")
 
     override fun observeRanking(): Flow<List<RankingItem>> {

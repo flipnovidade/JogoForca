@@ -50,6 +50,8 @@ import com.game.forca.game_forca.resources.Res
 import com.game.forca.game_forca.resources.category_label
 import com.game.forca.game_forca.resources.hint_button_icon
 import com.game.forca.game_forca.resources.hint_button_label
+import com.game.forca.game_forca.resources.info_label
+import com.game.forca.game_forca.resources.profile_label
 import com.game.forca.game_forca.resources.wrong_letters_label
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
 import com.game.forca.game_forca.ui.dialog.GameOverDialog
@@ -362,13 +364,13 @@ fun GameScreen(
 
                         BottomCircleButton(
                             icon = Icons.Default.Info,
-                            label = "INFO",
+                            label = stringResource(Res.string.info_label),
                             onClick = goToInfoScreenRanking
                         )
 
                         BottomCircleButton(
                             icon = Icons.Default.Person,
-                            label = "PERFIL",
+                            label = stringResource(Res.string.profile_label),
                             onClick = goToRegisterScreen
                         )
                     }
@@ -707,34 +709,6 @@ fun BottomCircleButton(
             text = label,
             color = Color.White,
             fontSize = 12.sp
-        )
-    }
-}
-
-@Composable
-private fun BottomBar(
-    onInfo: () -> Unit,
-    onProfile: () -> Unit
-) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-
-        BottomCircleButton(
-            icon = Icons.Default.Info,
-            label = "INFO",
-            onClick = onInfo
-        )
-
-        BottomCircleButton(
-            icon = Icons.Default.Person,
-            label = "PERFIL",
-            onClick = onProfile
         )
     }
 }

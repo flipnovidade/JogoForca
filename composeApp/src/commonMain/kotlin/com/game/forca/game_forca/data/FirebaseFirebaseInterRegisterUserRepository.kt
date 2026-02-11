@@ -4,7 +4,7 @@ import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.database.database
 import kotlinx.coroutines.flow.first
 
-class FirebaseRegisterUserRepository : RegisterUserRepository {
+class FirebaseFirebaseInterRegisterUserRepository : FirebaseInterRegisterUserRepository {
     private val usersReference = Firebase.database.reference("users")
 
     override suspend fun fetchFirstUser(): RegisterUserItem? {

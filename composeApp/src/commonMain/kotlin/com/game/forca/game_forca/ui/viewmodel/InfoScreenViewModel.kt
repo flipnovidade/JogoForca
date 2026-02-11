@@ -2,7 +2,7 @@ package com.game.forca.game_forca.ui.viewmodel
 
 import com.game.forca.game_forca.AppVersion
 import com.game.forca.game_forca.data.RankingItem
-import com.game.forca.game_forca.data.RankingRepository
+import com.game.forca.game_forca.data.FirebaseInterRankingRepository
 import com.game.forca.game_forca.getAppVersion
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
 class InfoScreenViewModel(
-    private val rankingRepository: RankingRepository
+    private val firebaseInterRankingRepository: FirebaseInterRankingRepository
 ) : BaseViewModel() {
     private val _ranking = MutableStateFlow<List<RankingItem>>(emptyList())
     val ranking: StateFlow<List<RankingItem>> = _ranking
@@ -27,7 +27,7 @@ class InfoScreenViewModel(
 
     init {
         viewModelScope.launch {
-            rankingRepository.observeRanking()
+            firebaseInterRankingRepository.observeRanking()
                 .onStart {
                     _isLoading.value = true
                     _errorMessage.value = null
