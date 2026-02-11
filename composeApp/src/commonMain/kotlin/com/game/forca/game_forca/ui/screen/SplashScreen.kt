@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
+import com.game.forca.game_forca.data.requestNotificationPermission
 import com.game.forca.game_forca.resources.Res
 import com.game.forca.game_forca.resources.splash_icon
 import com.game.forca.game_forca.resources.splash_initializing
@@ -54,6 +55,7 @@ fun SplashRoute(
     var navigationTriggered by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
+        requestNotificationPermission()
         // Animação suave do progresso
         for (i in 1..10) {
             delay(200) // Total de 2 segundos

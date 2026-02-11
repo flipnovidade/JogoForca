@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Hangman Game</string>
+    <string name="default_notification_channel_id">push_jogo_forca</string>
 </resources>

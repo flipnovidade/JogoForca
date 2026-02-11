@@ -10,6 +10,7 @@ Pod::Spec.new do |spec|
     spec.libraries                = 'c++'
     spec.ios.deployment_target    = '14.1'
     spec.dependency 'FirebaseDatabase', '10.29.0'
+    spec.dependency 'FirebaseMessaging', '10.29.0'
     if !Dir.exist?('build/cocoapods/framework/composeApp.framework') || Dir.empty?('build/cocoapods/framework/composeApp.framework')
         raise "
         Kotlin framework 'composeApp' doesn't exist yet, so a proper Xcode project can't be generated.

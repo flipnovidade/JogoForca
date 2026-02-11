@@ -83,12 +83,13 @@ class RegisterScreenViewModel(
                     email = _uiState.value.email.trim(),
                     score = localUser?.score ?: 0,
                     password = _uiState.value.password,
-                    keyForPush = "localUser?.keyForPush.orEmpty() old"
+                    keyForPush = localUser?.keyForPush.orEmpty()
                 )
                 val savedId = firebaseInterRegisterUserRepository.saveUser(requestUser)
                 requestUser.copy(idFirebase = savedId)
             }.onSuccess { savedUser ->
                 localStore.saveUser(savedUser)
+                firebaseInterRegisterLoginRepository.updateUser(savedUser)
                 _uiState.update {
                     it.copy(
                         name = savedUser.name,
@@ -141,12 +142,14 @@ class RegisterScreenViewModel(
                 return@launch
             }
 
+            val localUser = localStore.getUser()
+
             val savedUser = found.copy(
                 idFirebase = found.idFirebase,
                 name = found.name,
                 password = found.password,
                 email = found.email,
-                keyForPush = "localUser?.keyForPush.orEmpty() nova",
+                keyForPush = localUser?.keyForPush.orEmpty(),
                 score = 0
             )
 

@@ -7,6 +7,7 @@ import com.game.forca.game_forca.data.RegisterUserItem
 import com.game.forca.game_forca.data.WordItem
 import com.game.forca.game_forca.data.getSystemLocale
 import com.game.forca.game_forca.interfaces.GameEvent
+import com.game.forca.game_forca.interfaces.PushNotifier
 import com.game.forca.game_forca.resources.Res
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,8 @@ import kotlin.String
 
 class GameScreenviewModel(
     private val localStore: RegisterUserLocalStore,
-    private val firebaseInterRegisterLoginRepository: FirebaseInterRegisterLoginRepository
+    private val firebaseInterRegisterLoginRepository: FirebaseInterRegisterLoginRepository,
+    private val pushNotifier: PushNotifier
 ) : BaseViewModel() {
 
     private var _globalScore = MutableStateFlow(0)
@@ -56,8 +58,14 @@ class GameScreenviewModel(
     private val _openDialogMakeLogin = MutableStateFlow<Boolean>(false)
     val openDialogMakeLogin: StateFlow<Boolean> = _openDialogMakeLogin
 
+    private val _token = MutableStateFlow<String?>(null)
+    val token: StateFlow<String?> = _token.asStateFlow()
+
     init {
         viewModelScope.launch {
+            initialize()
+            loadToken()
+
             val savedProgress = localStore.getGameProgress()
             if (savedProgress != null) {
                 _positionStartedWord.value = savedProgress.first
@@ -91,6 +99,26 @@ class GameScreenviewModel(
                     category = wordItem.category.uppercase(),
                     assayHelp = wordItem.assay
                 )
+            }
+        }
+    }
+
+    suspend fun initialize() {
+        pushNotifier.initialize()
+    }
+
+    suspend fun loadToken() {
+            pushNotifier.getToken { result ->
+                viewModelScope.launch {
+                    _token.value = result
+                    val localUser = localStore.getUser()
+                    if (localUser == null){
+                        localStore.saveUser(RegisterUserItem(keyForPush = result!!))
+                    }else{
+                        val updatedUser = localUser.copy(keyForPush = result!!)
+                        localStore.saveUser(updatedUser)
+                    }
+                    println("getToken => {${result.toString()}}")
             }
         }
     }

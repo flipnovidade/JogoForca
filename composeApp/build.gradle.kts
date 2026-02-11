@@ -35,6 +35,7 @@ kotlin {
         ios.deploymentTarget = "14.1"
         version = "0.0.1"
         pod("FirebaseDatabase", version = "10.29.0")
+        pod("FirebaseMessaging", version = "10.29.0")
     }
 
     val koinVersion = "4.1.0"
@@ -48,6 +49,7 @@ kotlin {
             implementation("io.insert-koin:koin-android:3.5.3")
             implementation("com.google.firebase:firebase-config:22.1.1")
             implementation("com.google.firebase:firebase-database:21.0.0")
+            implementation("com.google.firebase:firebase-messaging:24.0.2")
             implementation("com.google.accompanist:accompanist-permissions:0.37.3")
             implementation(libs.androidx.datastore.preferences)
         }
@@ -70,8 +72,6 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
             implementation(libs.gitlive.firebase.app)
             implementation(libs.gitlive.firebase.database)
-
-
         }
         iosMain.dependencies {
 
@@ -123,10 +123,3 @@ dependencies {
     implementation(libs.androidx.exifinterface)
     debugImplementation(libs.compose.uiTooling)
 }
-
-
-
- //3 LOGAR VERIFICAR SE EH MESMA SENHA,
- //4 Cada ponto atualizar o score local e do firebase
- //5 ranking pega dos 5 que tema mais pontos
- // 6 depois de criar o objeto com o code de push sempre atualizar o objeto

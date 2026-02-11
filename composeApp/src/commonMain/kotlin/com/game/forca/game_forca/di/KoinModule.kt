@@ -16,6 +16,6 @@ fun sharedModules() = module {
     single<FirebaseInterRegisterLoginRepository> { FirebaseFirebaseInterRegisterLoginRepository() }
     single<FirebaseInterRegisterUserRepository> { FirebaseFirebaseInterRegisterUserRepository() }
     factory { InfoScreenViewModel(get()) }
-    factory { GameScreenviewModel(get(), get()) }
+    factory { GameScreenviewModel(get(), get(), get()) }
     factory { RegisterScreenViewModel(get(), get(), get()) }
 }
