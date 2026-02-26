@@ -28,7 +28,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -43,6 +45,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.data.closeApp
+import com.game.forca.game_forca.data.RegisterUserLocalStore
 import com.game.forca.game_forca.data.requestTrackingAuthorization
 import com.game.forca.game_forca.interfaces.GameDialogAction
 import com.game.forca.game_forca.interfaces.GameEvent
@@ -54,6 +57,7 @@ import com.game.forca.game_forca.resources.info_label
 import com.game.forca.game_forca.resources.profile_label
 import com.game.forca.game_forca.resources.wrong_letters_label
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
+import com.game.forca.game_forca.ui.dialog.RulesDialog
 import com.game.forca.game_forca.ui.dialog.GameOverDialog
 import com.game.forca.game_forca.ui.dialog.VictoryDialog
 import com.game.forca.game_forca.ui.viewmodel.GameScreenviewModel
@@ -67,6 +71,8 @@ fun GameScreen(
     navController: NavHostController,
     gameScreenviewModel: GameScreenviewModel = koinInject<GameScreenviewModel>()
 ) {
+    val localStore: RegisterUserLocalStore = koinInject()
+    var showRulesDialog by remember { mutableStateOf(false) }
 
     val backStackEntries by navController.currentBackStack.collectAsState()
 
@@ -146,6 +152,17 @@ fun GameScreen(
                 ?.savedStateHandle
                 ?.remove<GameDialogAction>("make_login_dialog_action")
         }
+    }
+
+    LaunchedEffect(Unit) {
+        val user = localStore.getUser()
+        val loggedIn = user != null &&
+            user.idFirebase.isNotBlank() &&
+            user.name.isNotBlank() &&
+            user.email.isNotBlank() &&
+            user.password.isNotBlank() &&
+            user.keyForPush.isNotBlank()
+        showRulesDialog = !loggedIn
     }
 
 
@@ -378,6 +395,10 @@ fun GameScreen(
             }
 
         }
+    }
+
+    if (showRulesDialog) {
+        RulesDialog(onDismiss = { showRulesDialog = false })
     }
 }
 
