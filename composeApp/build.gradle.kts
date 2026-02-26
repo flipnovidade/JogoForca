@@ -99,8 +99,8 @@ android {
         applicationId = "com.game.forca.flipsofts"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 3
-        versionName = "1.3"
+        versionCode = 4
+        versionName = "1.4"
     }
     packaging {
         resources {
