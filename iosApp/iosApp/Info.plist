@@ -2,9 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <array>
+        <dict>
+            <key>SKAdNetworkIdentifier</key>
+            <string>cstr6suwn9.skadnetwork</string>
+        </dict>
+    </array>
+	<key>GADApplicationIdentifier</key>
+	<string>Muda aqui</string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
-    <key>NSUserTrackingUsageDescription</key>
-    <string>We use tracking to provide personalized ads.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We use tracking to provide personalized ads.</string>
 </dict>
 </plist>

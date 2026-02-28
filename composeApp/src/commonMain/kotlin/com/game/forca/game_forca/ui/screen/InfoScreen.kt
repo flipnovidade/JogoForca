@@ -31,45 +31,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.AppVersion
+import com.game.forca.game_forca.ad.AdMobBanner
+import com.game.forca.game_forca.ad.AdMobInterstitial
 import com.game.forca.game_forca.data.RankingItem
-import com.game.forca.game_forca.resources.Res
-import com.game.forca.game_forca.resources.app_details_developer_label
-import com.game.forca.game_forca.resources.app_details_developer_name
-import com.game.forca.game_forca.resources.app_details_privacy_label
-import com.game.forca.game_forca.resources.app_details_privacy_value
-import com.game.forca.game_forca.resources.app_details_updated_badge
-import com.game.forca.game_forca.resources.app_details_version_label
-import com.game.forca.game_forca.resources.back_arrow
-import com.game.forca.game_forca.resources.credit_ack_text
-import com.game.forca.game_forca.resources.credit_ack_title
-import com.game.forca.game_forca.resources.credit_awards_text
-import com.game.forca.game_forca.resources.credit_awards_title
-import com.game.forca.game_forca.resources.credit_illustrations_names
-import com.game.forca.game_forca.resources.credit_illustrations_title
-import com.game.forca.game_forca.resources.credit_main_designer_name
-import com.game.forca.game_forca.resources.credit_main_designer_title
-import com.game.forca.game_forca.resources.info_screen_title
-import com.game.forca.game_forca.resources.position_ordinal
-import com.game.forca.game_forca.resources.ranking_email_display
-import com.game.forca.game_forca.resources.ranking_header_email
-import com.game.forca.game_forca.resources.ranking_header_points
-import com.game.forca.game_forca.resources.ranking_header_position
-import com.game.forca.game_forca.resources.section_app_details_icon
-import com.game.forca.game_forca.resources.section_app_details_title
-import com.game.forca.game_forca.resources.section_credits_icon
-import com.game.forca.game_forca.resources.section_credits_title
-import com.game.forca.game_forca.resources.section_ranking_icon
-import com.game.forca.game_forca.resources.section_ranking_title
 import com.game.forca.game_forca.ui.viewmodel.InfoScreenViewModel
 import org.koin.compose.koinInject
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
-import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun InfoScreen(
     navController: NavHostController,
     infoScreenViewModel: InfoScreenViewModel = koinInject<InfoScreenViewModel>()
 ) {
+    AdMobInterstitial()
     val ranking by infoScreenViewModel.ranking.collectAsState()
     val isLoading by infoScreenViewModel.isLoading.collectAsState()
     val errorMessage by infoScreenViewModel.errorMessage.collectAsState()
@@ -81,7 +55,7 @@ fun InfoScreen(
     }
 
     RegisterBackHandler  {
-        onBack()
+        onBack
     }
 
     Box(
@@ -103,14 +77,11 @@ fun InfoScreen(
                 .padding(16.dp)
         ) {
 
-            TopBar(title = stringResource(Res.string.info_screen_title), onBack = onBack)
+            TopBar(title = "Informações", onBack = onBack)
 
             Spacer(Modifier.height(24.dp))
 
-            SectionTitle(
-                stringResource(Res.string.section_ranking_title),
-                stringResource(Res.string.section_ranking_icon)
-            )
+            SectionTitle("Ranking Geral", "📊")
             when {
                 isLoading -> RankingStatusCard("Carregando ranking...")
                 errorMessage != null -> RankingStatusCard(errorMessage ?: "Erro ao carregar ranking.")
@@ -120,21 +91,16 @@ fun InfoScreen(
 
             Spacer(Modifier.height(24.dp))
 
-            SectionTitle(
-                stringResource(Res.string.section_app_details_title),
-                stringResource(Res.string.section_app_details_icon)
-            )
+            SectionTitle("Detalhes do App", "ℹ️")
             AppDetailsCard(infoScreenViewModel.appVersion)
 
             Spacer(Modifier.height(24.dp))
 
-            SectionTitle(
-                stringResource(Res.string.section_credits_title),
-                stringResource(Res.string.section_credits_icon)
-            )
+            SectionTitle("Créditos", "💙")
             CreditsCard()
 
             Spacer(Modifier.height(32.dp))
+            AdMobBanner(modifier = Modifier.fillMaxWidth())
         }
     }
 }
@@ -153,21 +119,15 @@ fun CreditsCard() {
             .background(Color(0xFF121C3D))
             .padding(16.dp)
     ) {
+        CreditItem("DESIGNER PRINCIPAL", "Alex Rivers")
+        CreditItem("ILUSTRAÇÕES", "Sarah Chen, Vector Lab")
         CreditItem(
-            stringResource(Res.string.credit_main_designer_title),
-            stringResource(Res.string.credit_main_designer_name)
+            "AGRADECIMENTOS",
+            "A todos os nossos testadores beta que ajudaram a eliminar bugs e melhorar nosso jogo."
         )
         CreditItem(
-            stringResource(Res.string.credit_illustrations_title),
-            stringResource(Res.string.credit_illustrations_names)
-        )
-        CreditItem(
-            stringResource(Res.string.credit_ack_title),
-            stringResource(Res.string.credit_ack_text)
-        )
-        CreditItem(
-            stringResource(Res.string.credit_awards_title),
-            stringResource(Res.string.credit_awards_text)
+            "PREMIAÇÃO",
+            "No último dia de cada mês, na última hora do dia, identificamos os 5 jogadores com maior pontuação. Em seguida, fazemos uma verificação para garantir que todos os pontos estejam de acordo com as regras. Caso algum jogador não atenda aos critérios, ele será desclassificado e o ranking será atualizado. Após a análise final, entraremos em contato com os vencedores pelo e-mail cadastrado para confirmar os dados e realizar o envio dos prêmios."
         )
     }
 }
@@ -197,7 +157,7 @@ private fun RankingRow(
         PositionBadge(item.position)
 
         Text(
-            text = stringResource(Res.string.ranking_email_display, item.email),
+            text = "  " + item.email,
             color = if (highlight) Color(0xFF3B7CFF) else Color.White,
             modifier = Modifier.weight(1f)
         )
@@ -215,13 +175,9 @@ private fun HeaderRow() {
     Row(
         modifier = Modifier.padding(vertical = 8.dp)
     ) {
-        HeaderText(stringResource(Res.string.ranking_header_position), Modifier.width(80.dp))
-        HeaderText(stringResource(Res.string.ranking_header_email), Modifier.weight(1f))
-        HeaderText(
-            stringResource(Res.string.ranking_header_points),
-            Modifier.width(80.dp),
-            alignEnd = true
-        )
+        HeaderText("POSIÇÃO", Modifier.width(80.dp))
+        HeaderText("EMAIL", Modifier.weight(1f))
+        HeaderText("PONTOS", Modifier.width(80.dp), alignEnd = true)
     }
 }
 
@@ -314,18 +270,12 @@ fun AppDetailsCard(appVersion: AppVersion) {
             .padding(16.dp)
     ) {
         DetailRow(
-            stringResource(Res.string.app_details_version_label),
+            "Versão",
             "${appVersion.name} (Build ${appVersion.build})",
-            trailing = stringResource(Res.string.app_details_updated_badge)
+            trailing = "ATUALIZADO"
         )
-        DetailRow(
-            stringResource(Res.string.app_details_developer_label),
-            stringResource(Res.string.app_details_developer_name)
-        )
-        DetailRow(
-            stringResource(Res.string.app_details_privacy_label),
-            stringResource(Res.string.app_details_privacy_value)
-        )
+        DetailRow("Desenvolvedor", "Flip Soft.")
+        DetailRow("Privacidade", "Outubro 2023")
     }
 }
 
@@ -374,7 +324,7 @@ private fun PositionBadge(position: Int) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(Res.string.position_ordinal, position),
+            text = "${position}º",
             color = if (position <= 3) color else Color.White.copy(alpha = 0.6f),
             fontWeight = FontWeight.Bold
         )
@@ -391,7 +341,7 @@ private fun TopBar(
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = stringResource(Res.string.back_arrow),
+            text = "←",
             fontSize = 24.sp,
             color = Color.White,
             modifier = Modifier

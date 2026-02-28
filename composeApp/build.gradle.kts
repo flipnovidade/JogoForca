@@ -36,6 +36,7 @@ kotlin {
         version = "0.0.1"
         pod("FirebaseDatabase", version = "10.29.0")
         pod("FirebaseMessaging", version = "10.29.0")
+        pod("Google-Mobile-Ads-SDK", version = "13.0.0")
     }
 
     val koinVersion = "4.1.0"
@@ -51,6 +52,7 @@ kotlin {
             implementation("com.google.firebase:firebase-database:21.0.0")
             implementation("com.google.firebase:firebase-messaging:24.0.2")
             implementation("com.google.accompanist:accompanist-permissions:0.37.3")
+            implementation("com.google.android.gms:play-services-ads:24.3.0")
             implementation(libs.androidx.datastore.preferences)
         }
         commonMain.dependencies {
@@ -99,8 +101,8 @@ android {
         applicationId = "com.game.forca.flipsofts"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
-        versionCode = 4
-        versionName = "1.4"
+        versionCode = 5
+        versionName = "1.5"
     }
     packaging {
         resources {

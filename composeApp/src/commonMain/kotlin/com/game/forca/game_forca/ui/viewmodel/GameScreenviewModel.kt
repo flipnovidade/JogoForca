@@ -1,14 +1,16 @@
 package com.game.forca.game_forca.ui.viewmodel
 
 import com.game.forca.game_forca.data.GameState
-import com.game.forca.game_forca.data.FirebaseInterRegisterLoginRepository
+import com.game.forca.game_forca.data.RegisterLoginRepository
 import com.game.forca.game_forca.data.RegisterUserLocalStore
 import com.game.forca.game_forca.data.RegisterUserItem
+import com.game.forca.game_forca.data.RegisterUserRepository
 import com.game.forca.game_forca.data.WordItem
 import com.game.forca.game_forca.data.getSystemLocale
 import com.game.forca.game_forca.interfaces.GameEvent
-import com.game.forca.game_forca.interfaces.PushNotifier
 import com.game.forca.game_forca.resources.Res
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,8 +23,7 @@ import kotlin.String
 
 class GameScreenviewModel(
     private val localStore: RegisterUserLocalStore,
-    private val firebaseInterRegisterLoginRepository: FirebaseInterRegisterLoginRepository,
-    private val pushNotifier: PushNotifier
+    private val registerLoginRepository: RegisterLoginRepository
 ) : BaseViewModel() {
 
     private var _globalScore = MutableStateFlow(0)
@@ -58,14 +59,8 @@ class GameScreenviewModel(
     private val _openDialogMakeLogin = MutableStateFlow<Boolean>(false)
     val openDialogMakeLogin: StateFlow<Boolean> = _openDialogMakeLogin
 
-    private val _token = MutableStateFlow<String?>(null)
-    val token: StateFlow<String?> = _token.asStateFlow()
-
     init {
         viewModelScope.launch {
-            initialize()
-            loadToken()
-
             val savedProgress = localStore.getGameProgress()
             if (savedProgress != null) {
                 _positionStartedWord.value = savedProgress.first
@@ -99,26 +94,6 @@ class GameScreenviewModel(
                     category = wordItem.category.uppercase(),
                     assayHelp = wordItem.assay
                 )
-            }
-        }
-    }
-
-    suspend fun initialize() {
-        pushNotifier.initialize()
-    }
-
-    suspend fun loadToken() {
-            pushNotifier.getToken { result ->
-                viewModelScope.launch {
-                    _token.value = result
-                    val localUser = localStore.getUser()
-                    if (localUser == null){
-                        localStore.saveUser(RegisterUserItem(keyForPush = result!!))
-                    }else{
-                        val updatedUser = localUser.copy(keyForPush = result!!)
-                        localStore.saveUser(updatedUser)
-                    }
-                    println("getToken => {${result.toString()}}")
             }
         }
     }
@@ -168,7 +143,7 @@ class GameScreenviewModel(
                         score = localUser.score + finalScore
                     )
 
-                    firebaseInterRegisterLoginRepository.updateUser(savedUser)
+                    registerLoginRepository.updateUser(savedUser)
 
                 }
             }

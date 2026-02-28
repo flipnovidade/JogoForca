@@ -18,9 +18,12 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.game.forca.game_forca.data.CurrentActivityHolder
+import com.google.android.gms.ads.MobileAds
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        MobileAds.initialize(this)
 
         CurrentActivityHolder.activity = this
 

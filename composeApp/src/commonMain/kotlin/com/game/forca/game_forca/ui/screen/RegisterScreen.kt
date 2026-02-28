@@ -33,6 +33,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.game.forca.game_forca.ad.AdMobBanner
+import com.game.forca.game_forca.ad.AdMobInterstitial
 import com.game.forca.game_forca.resources.Res
 import com.game.forca.game_forca.resources.already_have_account
 import com.game.forca.game_forca.resources.back_arrow
@@ -76,6 +78,7 @@ fun RegisterScreen(
     screenState: RegisterScreenState = RegisterScreenState.Register,
     registerScreenViewModel: RegisterScreenViewModel = koinInject<RegisterScreenViewModel>()
 ) {
+    AdMobInterstitial()
     val uiState by registerScreenViewModel.uiState.collectAsState()
     val validation by registerScreenViewModel.validation.collectAsState()
 
@@ -320,6 +323,8 @@ fun RegisterScreen(
                 }
                 RegisterScreenState.Registered -> Unit
             }
+
+            AdMobBanner(modifier = Modifier.fillMaxWidth())
         }
     }
 }

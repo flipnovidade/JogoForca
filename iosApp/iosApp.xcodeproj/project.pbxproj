@@ -6,6 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		A8F8C0412F52317A0024C293 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A8F8C0402F52317A0024C293 /* FirebaseAuth */; };
+		A8F8C0432F52317A0024C293 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = A8F8C0422F52317A0024C293 /* FirebaseDatabase */; };
+		A8F8C0452F52317A0024C293 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = A8F8C0442F52317A0024C293 /* FirebaseMessaging */; };
+		A8F8C0482F52324F0024C293 /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = A8F8C0472F52324F0024C293 /* GoogleMobileAds */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		8EF322FF7FC1986B384A4812 /* game_forca.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = game_forca.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -41,6 +48,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A8F8C0482F52324F0024C293 /* GoogleMobileAds in Frameworks */,
+				A8F8C0452F52317A0024C293 /* FirebaseMessaging in Frameworks */,
+				A8F8C0432F52317A0024C293 /* FirebaseDatabase in Frameworks */,
+				A8F8C0412F52317A0024C293 /* FirebaseAuth in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +96,10 @@
 			);
 			name = iosApp;
 			packageProductDependencies = (
+				A8F8C0402F52317A0024C293 /* FirebaseAuth */,
+				A8F8C0422F52317A0024C293 /* FirebaseDatabase */,
+				A8F8C0442F52317A0024C293 /* FirebaseMessaging */,
+				A8F8C0472F52324F0024C293 /* GoogleMobileAds */,
 			);
 			productName = iosApp;
 			productReference = 8EF322FF7FC1986B384A4812 /* game_forca.app */;
@@ -114,6 +129,10 @@
 			);
 			mainGroup = 5817CA81E5EAD84D6EE07AED;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				A8F8C03F2F52317A0024C293 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				A8F8C0462F52324F0024C293 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D1A380075AA38AAE8050387C /* Products */;
 			projectDirPath = "";
@@ -380,6 +399,48 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A8F8C03F2F52317A0024C293 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.10.0;
+			};
+		};
+		A8F8C0462F52324F0024C293 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 13.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A8F8C0402F52317A0024C293 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8F8C03F2F52317A0024C293 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		A8F8C0422F52317A0024C293 /* FirebaseDatabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8F8C03F2F52317A0024C293 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabase;
+		};
+		A8F8C0442F52317A0024C293 /* FirebaseMessaging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8F8C03F2F52317A0024C293 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseMessaging;
+		};
+		A8F8C0472F52324F0024C293 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A8F8C0462F52324F0024C293 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 874FC04A382272BB5E1E64B0 /* Project object */;
 }
