@@ -34,9 +34,17 @@ import com.game.forca.game_forca.AppVersion
 import com.game.forca.game_forca.ad.AdMobBanner
 import com.game.forca.game_forca.ad.AdMobInterstitial
 import com.game.forca.game_forca.data.RankingItem
+import com.game.forca.game_forca.resources.Res
+import com.game.forca.game_forca.resources.credit_ack_text
+import com.game.forca.game_forca.resources.credit_ack_title
+import com.game.forca.game_forca.resources.credit_awards_text
+import com.game.forca.game_forca.resources.credit_awards_title
+import com.game.forca.game_forca.resources.credit_illustrations_title
+import com.game.forca.game_forca.resources.credit_main_designer_title
 import com.game.forca.game_forca.ui.viewmodel.InfoScreenViewModel
 import org.koin.compose.koinInject
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun InfoScreen(
@@ -55,7 +63,7 @@ fun InfoScreen(
     }
 
     RegisterBackHandler  {
-        onBack
+        onBack()
     }
 
     Box(
@@ -119,15 +127,15 @@ fun CreditsCard() {
             .background(Color(0xFF121C3D))
             .padding(16.dp)
     ) {
-        CreditItem("DESIGNER PRINCIPAL", "Alex Rivers")
-        CreditItem("ILUSTRAÇÕES", "Sarah Chen, Vector Lab")
+        CreditItem(stringResource(Res.string.credit_main_designer_title), "Alex Rivers")
+        CreditItem(stringResource(Res.string.credit_illustrations_title), "Sarah Chen, Vector Lab")
         CreditItem(
-            "AGRADECIMENTOS",
-            "A todos os nossos testadores beta que ajudaram a eliminar bugs e melhorar nosso jogo."
+            stringResource(Res.string.credit_ack_title),
+            stringResource(Res.string.credit_ack_text)
         )
         CreditItem(
-            "PREMIAÇÃO",
-            "No último dia de cada mês, na última hora do dia, identificamos os 5 jogadores com maior pontuação. Em seguida, fazemos uma verificação para garantir que todos os pontos estejam de acordo com as regras. Caso algum jogador não atenda aos critérios, ele será desclassificado e o ranking será atualizado. Após a análise final, entraremos em contato com os vencedores pelo e-mail cadastrado para confirmar os dados e realizar o envio dos prêmios."
+            stringResource(Res.string.credit_awards_title),
+            stringResource(Res.string.credit_awards_text)
         )
     }
 }
