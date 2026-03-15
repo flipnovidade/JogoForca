@@ -78,6 +78,8 @@ fun RegisterScreen(
     screenState: RegisterScreenState = RegisterScreenState.Register,
     registerScreenViewModel: RegisterScreenViewModel = koinInject<RegisterScreenViewModel>()
 ) {
+
+    AdMobInterstitial()
     AdMobInterstitial()
     val uiState by registerScreenViewModel.uiState.collectAsState()
     val validation by registerScreenViewModel.validation.collectAsState()
@@ -323,8 +325,7 @@ fun RegisterScreen(
                 }
                 RegisterScreenState.Registered -> Unit
             }
-
-            AdMobBanner(modifier = Modifier.fillMaxWidth())
+            AdMobBanner(modifier = Modifier.fillMaxWidth().padding(16.dp))
         }
     }
 }

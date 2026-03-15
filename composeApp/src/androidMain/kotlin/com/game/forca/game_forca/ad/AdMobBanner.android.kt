@@ -30,7 +30,7 @@ actual fun AdMobBanner(modifier: Modifier) {
         factory = { context ->
             AdView(context).apply {
                 setAdSize(AdSize.BANNER)
-                adUnitId = "ca-app-pub-5254546742885775~9660950010"
+                adUnitId = "ca-app-pub-5254546742885775/3187212447"
                 loadAd(AdRequest.Builder().build())
             }
         }
@@ -49,7 +49,7 @@ actual fun AdMobInterstitial(modifier: Modifier) {
         val request = AdRequest.Builder().build()
         InterstitialAd.load(
             context,
-            "ca-app-pub-5254546742885775~9660950010",
+            "ca-app-pub-5254546742885775/7121388912",
             request,
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
@@ -80,7 +80,7 @@ actual fun AdMobRewarded(modifier: Modifier) {
         val request = AdRequest.Builder().build()
         RewardedAd.load(
             context,
-            "ca-app-pub-5254546742885775~9660950010",
+            "ca-app-pub-5254546742885775/7593361313",
             request,
             object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {

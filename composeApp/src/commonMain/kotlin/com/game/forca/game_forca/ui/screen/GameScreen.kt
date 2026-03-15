@@ -46,6 +46,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.ad.AdMobBanner
 import com.game.forca.game_forca.ad.AdMobInterstitial
+import com.game.forca.game_forca.ad.AdMobRewarded
 import com.game.forca.game_forca.data.closeApp
 import com.game.forca.game_forca.data.RegisterUserLocalStore
 import com.game.forca.game_forca.data.requestTrackingAuthorization
@@ -73,7 +74,9 @@ fun GameScreen(
     navController: NavHostController,
     gameScreenviewModel: GameScreenviewModel = koinInject<GameScreenviewModel>()
 ) {
+
     AdMobInterstitial()
+    AdMobRewarded()
     val localStore: RegisterUserLocalStore = koinInject()
     var showRulesDialog by remember { mutableStateOf(false) }
 
@@ -398,7 +401,7 @@ fun GameScreen(
             }
 
             Spacer(Modifier.height(16.dp))
-            AdMobBanner(modifier = Modifier.fillMaxWidth())
+            AdMobBanner(modifier = Modifier.fillMaxWidth().padding(16.dp))
         }
     }
 
@@ -737,9 +740,4 @@ fun BottomCircleButton(
             fontSize = 12.sp
         )
     }
-}
-
-@Composable
-fun ShowAdBanner() {
-    AdMobBanner(modifier = Modifier.fillMaxWidth().padding(16.dp))
 }

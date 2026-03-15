@@ -51,6 +51,8 @@ fun InfoScreen(
     navController: NavHostController,
     infoScreenViewModel: InfoScreenViewModel = koinInject<InfoScreenViewModel>()
 ) {
+
+    AdMobInterstitial()
     AdMobInterstitial()
     val ranking by infoScreenViewModel.ranking.collectAsState()
     val isLoading by infoScreenViewModel.isLoading.collectAsState()
@@ -108,7 +110,7 @@ fun InfoScreen(
             CreditsCard()
 
             Spacer(Modifier.height(32.dp))
-            AdMobBanner(modifier = Modifier.fillMaxWidth())
+            AdMobBanner(modifier = Modifier.fillMaxWidth().padding(16.dp))
         }
     }
 }

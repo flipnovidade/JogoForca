@@ -16,7 +16,8 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:enableOnBackInvokedCallback="true"
-            android:theme="@style/Theme.App.Splash" tools:targetApi="33">
+            android:theme="@style/Theme.App.Splash"
+            tools:targetApi="33" >
 
         <meta-data
                 android:name="com.google.android.gms.ads.APPLICATION_ID"
