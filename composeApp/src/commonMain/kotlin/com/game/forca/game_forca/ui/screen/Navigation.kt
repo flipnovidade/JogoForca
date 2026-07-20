@@ -18,8 +18,23 @@ import com.game.forca.game_forca.ui.dialog.MakeLoginDialogRoute
 import com.game.forca.game_forca.ui.dialog.VictoryDialog
 import com.game.forca.game_forca.ui.dialog.VictoryDialogRoute
 
+import androidx.compose.runtime.LaunchedEffect
+import kotlinx.coroutines.flow.collectLatest
+import com.game.forca.game_forca.ui.viewmodel.GlobalAnalyticsViewModel
+
 @Composable
-fun AppNavigation(navController: NavHostController) {
+fun AppNavigation(
+    navController: NavHostController,
+    globalAnalyticsViewModel: GlobalAnalyticsViewModel
+) {
+    LaunchedEffect(navController) {
+        navController.currentBackStackEntryFlow.collectLatest { backStackEntry ->
+            backStackEntry.destination.route?.let { route ->
+                globalAnalyticsViewModel.logScreenView(route)
+            }
+        }
+    }
+
     NavHost(
         navController = navController, 
         startDestination = "splashScreen", 

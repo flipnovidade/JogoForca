@@ -20,7 +20,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 
 @Composable
-actual fun AdMobBanner(modifier: Modifier) {
+actual fun AdMobBanner(modifier: Modifier, adUnitId: String) {
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         MobileAds.initialize(context)
@@ -30,7 +30,7 @@ actual fun AdMobBanner(modifier: Modifier) {
         factory = { context ->
             AdView(context).apply {
                 setAdSize(AdSize.BANNER)
-                adUnitId = "ca-app-pub-5254546742885775/3187212447"
+                this.adUnitId = if (adUnitId.isNotEmpty()) adUnitId else "ca-app-pub-5254546742885775/3187212447"
                 loadAd(AdRequest.Builder().build())
             }
         }
@@ -38,7 +38,7 @@ actual fun AdMobBanner(modifier: Modifier) {
 }
 
 @Composable
-actual fun AdMobInterstitial(modifier: Modifier) {
+actual fun AdMobInterstitial(modifier: Modifier, adUnitId: String, showAd: Boolean) {
     val context = LocalContext.current
     val (shown, setShown) = remember { mutableStateOf(false) }
 
@@ -49,14 +49,16 @@ actual fun AdMobInterstitial(modifier: Modifier) {
         val request = AdRequest.Builder().build()
         InterstitialAd.load(
             context,
-            "ca-app-pub-5254546742885775/7121388912",
+            if (adUnitId.isNotEmpty()) adUnitId else "ca-app-pub-5254546742885775/7121388912",
             request,
             object : InterstitialAdLoadCallback() {
                 override fun onAdLoaded(ad: InterstitialAd) {
                     val activity = CurrentActivityHolder.activity ?: return
                     if (!shown) {
                         setShown(true)
-                        ad.show(activity)
+                        if (showAd) {
+                            ad.show(activity)
+                        }
                     }
                 }
 
@@ -69,7 +71,7 @@ actual fun AdMobInterstitial(modifier: Modifier) {
 }
 
 @Composable
-actual fun AdMobRewarded(modifier: Modifier) {
+actual fun AdMobRewarded(modifier: Modifier, adUnitId: String, showAd: Boolean) {
     val context = LocalContext.current
     val (shown, setShown) = remember { mutableStateOf(false) }
 
@@ -80,14 +82,16 @@ actual fun AdMobRewarded(modifier: Modifier) {
         val request = AdRequest.Builder().build()
         RewardedAd.load(
             context,
-            "ca-app-pub-5254546742885775/7593361313",
+            if (adUnitId.isNotEmpty()) adUnitId else "ca-app-pub-5254546742885775/7593361313",
             request,
             object : RewardedAdLoadCallback() {
                 override fun onAdLoaded(ad: RewardedAd) {
                     val activity = CurrentActivityHolder.activity ?: return
                     if (!shown) {
                         setShown(true)
-                        ad.show(activity) { /* reward earned */ }
+                        if (showAd) {
+                            ad.show(activity) { /* reward earned */ }
+                        }
                     }
                 }
 

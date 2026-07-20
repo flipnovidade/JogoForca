@@ -68,15 +68,26 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 import org.koin.compose.koinInject
+import com.game.forca.game_forca.analytics.AnalyticsService
+import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
 
 @Composable
 fun GameScreen(
     navController: NavHostController,
-    gameScreenviewModel: GameScreenviewModel = koinInject<GameScreenviewModel>()
+    gameScreenviewModel: GameScreenviewModel = koinInject<GameScreenviewModel>(),
+    adsViewModel: AdsViewModel = koinInject<AdsViewModel>()
 ) {
 
-    AdMobInterstitial()
-    AdMobRewarded()
+    val adsConfig by adsViewModel.adsConfig.collectAsState()
+
+    AdMobInterstitial(
+        adUnitId = adsConfig.interstitialAdUnitId,
+        showAd = adsConfig.showInterstitial
+    )
+    AdMobRewarded(
+        adUnitId = adsConfig.rewardedAdUnitId,
+        showAd = adsConfig.showRewarded
+    )
     val localStore: RegisterUserLocalStore = koinInject()
     var showRulesDialog by remember { mutableStateOf(false) }
 
@@ -284,19 +295,23 @@ fun GameScreen(
             navController.popBackStack()
         }
 
+        gameScreenviewModel.logClick("game_screen_close")
         println("📍 Tentando fechar...")
         println("   Tem anterior? ${navController.previousBackStackEntry != null}")
     }
     val onHint: () -> Unit = {
+        gameScreenviewModel.logClick("game_screen_hint")
         gameScreenviewModel.onEvent(GameEvent.OpenHint)
     }
     val goToInfoScreenRanking: () -> Unit = {
+        gameScreenviewModel.logClick("game_screen_info")
         navController.navigate("infoScreen"){
             //restoreState = true
         }
     }
 
     val goToRegisterScreen: () -> Unit = {
+        gameScreenviewModel.logClick("game_screen_profile")
         navController.navigate("registerScreen")
     }
 
@@ -365,6 +380,7 @@ fun GameScreen(
                     Keyboard(
                         disabledLetters = usedLetters,
                         onLetterClick = { letter ->
+                            gameScreenviewModel.logClick("game_screen_keyboard_$letter")
                             gameScreenviewModel.onEvent(
                                 GameEvent.GuessLetter(letter)
                             )
@@ -401,7 +417,12 @@ fun GameScreen(
             }
 
             Spacer(Modifier.height(16.dp))
-            AdMobBanner(modifier = Modifier.fillMaxWidth().padding(16.dp))
+            if (adsConfig.showBannerBottom) {
+                AdMobBanner(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    adUnitId = adsConfig.bannerBottomAdUnitId
+                )
+            }
         }
     }
 

@@ -65,6 +65,8 @@ import com.game.forca.game_forca.ui.components.RegisterBackHandler
 import com.game.forca.game_forca.ui.viewmodel.RegisterScreenViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
+import com.game.forca.game_forca.analytics.AnalyticsService
+import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
 
 enum class RegisterScreenState {
     Register,
@@ -76,11 +78,16 @@ enum class RegisterScreenState {
 fun RegisterScreen(
     navController: NavHostController,
     screenState: RegisterScreenState = RegisterScreenState.Register,
-    registerScreenViewModel: RegisterScreenViewModel = koinInject<RegisterScreenViewModel>()
+    registerScreenViewModel: RegisterScreenViewModel = koinInject<RegisterScreenViewModel>(),
+    adsViewModel: AdsViewModel = koinInject<AdsViewModel>()
 ) {
 
-    AdMobInterstitial()
-    AdMobInterstitial()
+    val adsConfig by adsViewModel.adsConfig.collectAsState()
+
+    AdMobInterstitial(
+        adUnitId = adsConfig.interstitialAdUnitId,
+        showAd = adsConfig.showInterstitial
+    )
     val uiState by registerScreenViewModel.uiState.collectAsState()
     val validation by registerScreenViewModel.validation.collectAsState()
 
@@ -125,8 +132,12 @@ fun RegisterScreen(
     val onEmailChange: (String) -> Unit = registerScreenViewModel::onEmailChange
     val onPasswordChange: (String) -> Unit = registerScreenViewModel::onPasswordChange
     val onConfirmPasswordChange: (String) -> Unit = registerScreenViewModel::onConfirmPasswordChange
-    val onTogglePasswordVisibility: () -> Unit =  registerScreenViewModel::togglePasswordVisibility
+    val onTogglePasswordVisibility: () -> Unit = {
+        registerScreenViewModel.logClick("register_screen_toggle_password")
+        registerScreenViewModel.togglePasswordVisibility()
+    }
     val onBack: () -> Unit = {
+        registerScreenViewModel.logClick("register_screen_back")
         navController.popBackStack()
         println("onBack")
     }
@@ -245,6 +256,7 @@ fun RegisterScreen(
                     PrimaryButton(
                         text = stringResource(Res.string.register_button),
                         onClick = {
+                            registerScreenViewModel.logClick("register_screen_register_btn")
                             registerScreenViewModel.setShowErrors(true)
                             if (validation.isRegisterValid) {
                                 onRegister()
@@ -257,6 +269,7 @@ fun RegisterScreen(
                     PrimaryButton(
                         text = stringResource(Res.string.login_button),
                         onClick = {
+                            registerScreenViewModel.logClick("register_screen_login_btn")
                             registerScreenViewModel.setShowErrors(true)
                             if (validation.isLoginValid) {
                                 onLogin()
@@ -269,6 +282,7 @@ fun RegisterScreen(
                     PrimaryButton(
                         text = stringResource(Res.string.logout_button),
                         onClick = {
+                            registerScreenViewModel.logClick("register_screen_logout_btn")
                             registerScreenViewModel.setShowErrors(false)
                             onLogout()
                         },
@@ -300,6 +314,7 @@ fun RegisterScreen(
                             color = Color(0xFF4A8CFF),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.clickable {
+                                registerScreenViewModel.logClick("register_screen_goto_login")
                                 registerScreenViewModel.setShowErrors(false)
                                 registerScreenViewModel.setScreenState(RegisterScreenState.Login)
                             }
@@ -315,6 +330,7 @@ fun RegisterScreen(
                             color = Color(0xFF4A8CFF),
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.clickable {
+                                registerScreenViewModel.logClick("register_screen_goto_register")
                                 registerScreenViewModel.setShowErrors(false)
                                 registerScreenViewModel.setScreenState(RegisterScreenState.Register)
                             }
@@ -325,7 +341,12 @@ fun RegisterScreen(
                 }
                 RegisterScreenState.Registered -> Unit
             }
-            AdMobBanner(modifier = Modifier.fillMaxWidth().padding(16.dp))
+            if (adsConfig.showBannerBottom) {
+                AdMobBanner(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    adUnitId = adsConfig.bannerBottomAdUnitId
+                )
+            }
         }
     }
 }

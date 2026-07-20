@@ -35,6 +35,7 @@ import com.game.forca.game_forca.resources.victory_icon
 import com.game.forca.game_forca.resources.victory_title
 import com.game.forca.game_forca.resources.word_was_label
 import org.jetbrains.compose.resources.stringResource
+import com.game.forca.game_forca.analytics.AnalyticsService
 
 @Composable
 fun VictoryDialogRoute(
@@ -46,6 +47,7 @@ fun VictoryDialogRoute(
         word = word, // ❌ NÃO USE
         points = points,
         onNextWord = {
+            AnalyticsService.logClick("victory_next_word")
             sendResult(navController, GameDialogAction.RETRY)
         },
         onBackToMenu = {
@@ -65,6 +67,8 @@ fun VictoryDialog(
     onBackToMenu: () -> Unit,
     onDismiss: () -> Unit
 ) {
+    val globalAnalyticsViewModel: GlobalAnalyticsViewModel = koinInject()
+
     Box(
         modifier = Modifier
             .clickable(

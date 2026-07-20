@@ -10,6 +10,7 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "2.1.20"
     id("org.jetbrains.kotlin.native.cocoapods")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 kotlin {
@@ -37,6 +38,9 @@ kotlin {
         pod("FirebaseDatabase", version = "10.29.0")
         pod("FirebaseMessaging", version = "10.29.0")
         pod("Google-Mobile-Ads-SDK", version = "13.0.0")
+        pod("FirebaseAnalytics", version = "10.29.0")
+        pod("FirebaseRemoteConfig", version = "10.29.0")
+        pod("FirebaseCrashlytics", version = "10.29.0")
     }
 
     val koinVersion = "4.1.0"
@@ -51,6 +55,7 @@ kotlin {
             implementation("com.google.firebase:firebase-config:22.1.1")
             implementation("com.google.firebase:firebase-database:21.0.0")
             implementation("com.google.firebase:firebase-messaging:24.0.2")
+            implementation("com.google.firebase:firebase-analytics:22.1.2")
             implementation("com.google.accompanist:accompanist-permissions:0.37.3")
             implementation("com.google.android.gms:play-services-ads:24.3.0")
             implementation(libs.androidx.datastore.preferences)
@@ -74,6 +79,9 @@ kotlin {
             implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
             implementation(libs.gitlive.firebase.app)
             implementation(libs.gitlive.firebase.database)
+            implementation(libs.gitlive.firebase.analytics)
+            implementation(libs.gitlive.firebase.config)
+            implementation(libs.gitlive.firebase.crashlytics)
         }
         iosMain.dependencies {
 

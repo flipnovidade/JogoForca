@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-expect fun AdMobBanner(modifier: Modifier = Modifier)
+expect fun AdMobBanner(modifier: Modifier = Modifier, adUnitId: String)
 
 @Composable
-expect fun AdMobRewarded(modifier: Modifier = Modifier)
+expect fun AdMobRewarded(modifier: Modifier = Modifier, adUnitId: String, showAd: Boolean)
 
 @Composable
-expect fun AdMobInterstitial(modifier: Modifier = Modifier)
+expect fun AdMobInterstitial(modifier: Modifier = Modifier, adUnitId: String, showAd: Boolean)

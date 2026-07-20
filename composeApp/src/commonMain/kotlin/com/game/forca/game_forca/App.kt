@@ -11,20 +11,34 @@ import androidx.navigation.compose.rememberNavController
 import com.game.forca.game_forca.ad.AdMobBanner
 import com.game.forca.game_forca.ui.screen.AppNavigation
 
+import com.game.forca.game_forca.ui.viewmodel.GlobalAnalyticsViewModel
+import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
+import org.koin.compose.koinInject
+
 @Composable
 @Preview
 fun App(
     onNavHostReady: suspend (NavController) -> Unit = {}
 ) {
     val navController = rememberNavController()
-    AppNavigation(navController)
+    val globalAnalyticsViewModel: GlobalAnalyticsViewModel = koinInject()
+    AppNavigation(navController, globalAnalyticsViewModel)
 
     LaunchedEffect(navController) {
+        globalAnalyticsViewModel.logAppStart()
         onNavHostReady(navController)
     }
 }
 
 @Composable
 fun ShowAdBanner() {
-    AdMobBanner(modifier = Modifier.fillMaxWidth().padding(16.dp))
+    val adsViewModel: AdsViewModel = koinInject()
+    val adsConfig by adsViewModel.adsConfig.collectAsState()
+
+    if (adsConfig.showBannerBottom) {
+        AdMobBanner(
+            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            adUnitId = adsConfig.bannerBottomAdUnitId
+        )
+    }
 }

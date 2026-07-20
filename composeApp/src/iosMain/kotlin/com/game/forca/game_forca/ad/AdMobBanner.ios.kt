@@ -19,11 +19,11 @@ import cocoapods.GoogleMobileAds.kGADAdSizeBanner
 import platform.UIKit.UIApplication
 
 @Composable
-actual fun AdMobBanner(modifier: Modifier){
+actual fun AdMobBanner(modifier: Modifier, adUnitId: String){
     UIKitView(
         factory = {
             val banner = GADBannerView(adSize = kGADAdSizeBanner)
-            banner.adUnitID = "ca-app-pub-3940256099942544/2934735716"
+            banner.adUnitID = if (adUnitId.isNotEmpty()) adUnitId else "ca-app-pub-3940256099942544/2934735716"
             banner.rootViewController = UIApplication.sharedApplication.keyWindow?.rootViewController
             banner.loadRequest(GADRequest())
             banner
@@ -41,19 +41,19 @@ actual fun AdMobBanner(modifier: Modifier){
 }
 
 @Composable
-actual fun AdMobInterstitial(modifier: Modifier) {
+actual fun AdMobInterstitial(modifier: Modifier, adUnitId: String, showAd: Boolean) {
     val (shown, setShown) = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (shown) return@LaunchedEffect
         GADInterstitialAd.loadWithAdUnitID(
-            adUnitID = "ca-app-pub-3940256099942544/4411468910",
+            adUnitID = if (adUnitId.isNotEmpty()) adUnitId else "ca-app-pub-3940256099942544/4411468910",
             request = GADRequest(),
             completionHandler = { ad, _ ->
                 if (!shown && ad != null) {
                     setShown(true)
                     val root = UIApplication.sharedApplication.keyWindow?.rootViewController
-                    if (root != null) {
+                    if (root != null && showAd) {
                         ad.presentFromRootViewController(root)
                     }
                 }
@@ -63,19 +63,19 @@ actual fun AdMobInterstitial(modifier: Modifier) {
 }
 
 @Composable
-actual fun AdMobRewarded(modifier: Modifier) {
+actual fun AdMobRewarded(modifier: Modifier, adUnitId: String, showAd: Boolean) {
     val (shown, setShown) = remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         if (shown) return@LaunchedEffect
         GADRewardedAd.loadWithAdUnitID(
-            adUnitID = "ca-app-pub-3940256099942544/1712485313",
+            adUnitID = if (adUnitId.isNotEmpty()) adUnitId else "ca-app-pub-3940256099942544/1712485313",
             request = GADRequest(),
             completionHandler = { ad, _ ->
                 if (!shown && ad != null) {
                     setShown(true)
                     val root = UIApplication.sharedApplication.keyWindow?.rootViewController
-                    if (root != null) {
+                    if (root != null && showAd) {
                         ad.presentFromRootViewController(root) { _ ->
                             // reward earned
                         }

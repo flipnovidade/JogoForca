@@ -42,19 +42,26 @@ import com.game.forca.game_forca.resources.try_again_button
 import com.game.forca.game_forca.ui.screen.PrimaryButton
 import org.jetbrains.compose.resources.stringResource
 
+import com.game.forca.game_forca.ui.viewmodel.GlobalAnalyticsViewModel
+import org.koin.compose.koinInject
+
 @Composable
 fun GameOverDialogRoute(
     navController: NavHostController,
     correctWord: String = "",
     globalScore: Int = 0
 ) {
+    val globalAnalyticsViewModel: GlobalAnalyticsViewModel = koinInject()
+
     GameOverDialog(
         correctWord = correctWord,
         globalScore = globalScore,
         onRetry = {
+            globalAnalyticsViewModel.logClick("game_over_retry_btn")
             sendResult(navController, GameDialogAction.RETRY)
         },
         onBackToMenu = {
+            globalAnalyticsViewModel.logClick("game_over_back_to_menu_btn")
             sendResult(navController, GameDialogAction.RETRY)
         },
         onDismiss = {

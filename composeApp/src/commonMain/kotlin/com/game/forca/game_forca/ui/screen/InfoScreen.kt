@@ -44,22 +44,30 @@ import com.game.forca.game_forca.resources.credit_main_designer_title
 import com.game.forca.game_forca.ui.viewmodel.InfoScreenViewModel
 import org.koin.compose.koinInject
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
+import com.game.forca.game_forca.analytics.AnalyticsService
+import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun InfoScreen(
     navController: NavHostController,
-    infoScreenViewModel: InfoScreenViewModel = koinInject<InfoScreenViewModel>()
+    infoScreenViewModel: InfoScreenViewModel = koinInject<InfoScreenViewModel>(),
+    adsViewModel: AdsViewModel = koinInject<AdsViewModel>()
 ) {
 
-    AdMobInterstitial()
-    AdMobInterstitial()
+    val adsConfig by adsViewModel.adsConfig.collectAsState()
+    
+    AdMobInterstitial(
+        adUnitId = adsConfig.interstitialAdUnitId,
+        showAd = adsConfig.showInterstitial
+    )
     val ranking by infoScreenViewModel.ranking.collectAsState()
     val isLoading by infoScreenViewModel.isLoading.collectAsState()
     val errorMessage by infoScreenViewModel.errorMessage.collectAsState()
     val myEmail = infoScreenViewModel.myEmail
 
     val onBack: () -> Unit = {
+        infoScreenViewModel.logClick("info_screen_back")
         navController.popBackStack()
         println("Back pressed")
     }
@@ -110,7 +118,12 @@ fun InfoScreen(
             CreditsCard()
 
             Spacer(Modifier.height(32.dp))
-            AdMobBanner(modifier = Modifier.fillMaxWidth().padding(16.dp))
+            if (adsConfig.showBannerBottom) {
+                AdMobBanner(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    adUnitId = adsConfig.bannerBottomAdUnitId
+                )
+            }
         }
     }
 }

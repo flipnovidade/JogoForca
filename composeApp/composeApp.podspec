@@ -9,8 +9,11 @@ Pod::Spec.new do |spec|
     spec.vendored_frameworks      = 'build/cocoapods/framework/composeApp.framework'
     spec.libraries                = 'c++'
     spec.ios.deployment_target    = '14.1'
+    spec.dependency 'FirebaseAnalytics', '10.29.0'
+    spec.dependency 'FirebaseCrashlytics', '10.29.0'
     spec.dependency 'FirebaseDatabase', '10.29.0'
     spec.dependency 'FirebaseMessaging', '10.29.0'
+    spec.dependency 'FirebaseRemoteConfig', '10.29.0'
     spec.dependency 'Google-Mobile-Ads-SDK', '13.0.0'
     if !Dir.exist?('build/cocoapods/framework/composeApp.framework') || Dir.empty?('build/cocoapods/framework/composeApp.framework')
         raise "

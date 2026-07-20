@@ -32,12 +32,17 @@ import com.game.forca.game_forca.resources.make_login_dialog_icon
 import com.game.forca.game_forca.resources.make_login_dialog_message
 import com.game.forca.game_forca.resources.make_login_dialog_text
 
+import com.game.forca.game_forca.ui.viewmodel.GlobalAnalyticsViewModel
+import org.koin.compose.koinInject
+
 @Composable
 fun MakeLoginDialogRoute(
     navController: NavHostController,
 ) {
+    val globalAnalyticsViewModel: GlobalAnalyticsViewModel = koinInject()
     MakeLogin(
         onGoToLogin = {
+            globalAnalyticsViewModel.logClick("make_login_btn")
             sendResult(navController, GameDialogAction.RETRY)
         }, navController = navController,
     )

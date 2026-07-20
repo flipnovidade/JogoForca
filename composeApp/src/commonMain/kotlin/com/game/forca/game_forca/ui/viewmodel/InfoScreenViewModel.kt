@@ -10,11 +10,20 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
+import com.game.forca.game_forca.analytics.AnalyticsService
+import com.game.forca.game_forca.crashlytics.CrashlyticsService
+
 class InfoScreenViewModel(
-    private val firebaseInterRankingRepository: FirebaseInterRankingRepository
+    private val firebaseInterRankingRepository: FirebaseInterRankingRepository,
+    private val analyticsService: AnalyticsService,
+    private val crashlyticsService: CrashlyticsService
 ) : BaseViewModel() {
     private val _ranking = MutableStateFlow<List<RankingItem>>(emptyList())
     val ranking: StateFlow<List<RankingItem>> = _ranking
+
+    fun logClick(elementName: String) {
+        analyticsService.logClick(elementName)
+    }
 
     private val _isLoading = MutableStateFlow(true)
     val isLoading: StateFlow<Boolean> = _isLoading
@@ -33,6 +42,7 @@ class InfoScreenViewModel(
                     _errorMessage.value = null
                 }
                 .catch { throwable ->
+                    crashlyticsService.recordException(throwable)
                     _errorMessage.value = throwable.message ?: "Erro ao carregar ranking"
                     _isLoading.value = false
                 }

@@ -19,10 +19,19 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.Int
 import kotlin.String
 
+import com.game.forca.game_forca.analytics.AnalyticsService
+import com.game.forca.game_forca.crashlytics.CrashlyticsService
+
 class GameScreenviewModel(
     private val localStore: RegisterUserLocalStore,
-    private val firebaseInterRegisterLoginRepository: FirebaseInterRegisterLoginRepository
+    private val firebaseInterRegisterLoginRepository: FirebaseInterRegisterLoginRepository,
+    private val analyticsService: AnalyticsService,
+    private val crashlyticsService: CrashlyticsService
 ) : BaseViewModel() {
+
+    fun logClick(elementName: String) {
+        analyticsService.logClick(elementName)
+    }
 
     private var _globalScore = MutableStateFlow(0)
     val globalScore : StateFlow<Int> = _globalScore
@@ -220,6 +229,7 @@ class GameScreenviewModel(
         return try {
             Res.readBytes(fileName).decodeToString()
         } catch (e: Exception) {
+            crashlyticsService.recordException(e)
             _numberFileWords.update {
                 0
             }

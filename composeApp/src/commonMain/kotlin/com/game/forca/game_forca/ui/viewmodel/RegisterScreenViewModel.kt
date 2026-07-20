@@ -10,6 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.asStateFlow
+import com.game.forca.game_forca.analytics.AnalyticsService
+import com.game.forca.game_forca.crashlytics.CrashlyticsService
 
 data class RegisterUiState(
     val screenState: RegisterScreenState = RegisterScreenState.Register,
@@ -37,10 +39,16 @@ data class RegisterValidation(
 class RegisterScreenViewModel(
     private val firebaseInterRegisterUserRepository: FirebaseInterRegisterUserRepository,
     private val localStore: RegisterUserLocalStore,
-    private val firebaseInterRegisterLoginRepository: FirebaseInterRegisterLoginRepository
+    private val firebaseInterRegisterLoginRepository: FirebaseInterRegisterLoginRepository,
+    private val analyticsService: AnalyticsService,
+    private val crashlyticsService: CrashlyticsService
 ) : BaseViewModel() {
     private val _uiState = MutableStateFlow(RegisterUiState())
     val uiState: StateFlow<RegisterUiState> = _uiState
+
+    fun logClick(elementName: String) {
+        analyticsService.logClick(elementName)
+    }
 
     private val _validation = MutableStateFlow(RegisterValidation())
     val validation: StateFlow<RegisterValidation> = _validation.asStateFlow()
@@ -101,6 +109,8 @@ class RegisterScreenViewModel(
                     )
                 }
                 updateValidation()
+            }.onFailure { exception ->
+                crashlyticsService.recordException(exception)
             }
         }
     }
@@ -132,43 +142,47 @@ class RegisterScreenViewModel(
         }
 
         viewModelScope.launch {
-            val found = firebaseInterRegisterLoginRepository.findByEmailPassword(
-                email = _uiState.value.email.trim(),
-                password = _uiState.value.password
-            )
-            if (found == null) {
-                _uiState.update { it.copy(showErrors = true) }
-                updateValidation()
-                return@launch
-            }
-
-            val localUser = localStore.getUser()
-
-            val savedUser = found.copy(
-                idFirebase = found.idFirebase,
-                name = found.name,
-                password = found.password,
-                email = found.email,
-                keyForPush = localUser?.keyForPush.orEmpty(),
-                score = 0
-            )
-
-            firebaseInterRegisterLoginRepository.updateUser(savedUser)
-
-            localStore.saveUser(savedUser)
-            localStore.saveGameProgress(0, 0)
-
-            _uiState.update {
-                it.copy(
-                    name = found.name,
-                    email = found.email,
-                    password = found.password,
-                    screenState = RegisterScreenState.Registered,
-                    confirmPassword = found.password,
-                    showErrors = false
+            runCatching {
+                val found = firebaseInterRegisterLoginRepository.findByEmailPassword(
+                    email = _uiState.value.email.trim(),
+                    password = _uiState.value.password
                 )
+                if (found == null) {
+                    _uiState.update { it.copy(showErrors = true) }
+                    updateValidation()
+                    return@runCatching
+                }
+
+                val localUser = localStore.getUser()
+
+                val savedUser = found.copy(
+                    idFirebase = found.idFirebase,
+                    name = found.name,
+                    password = found.password,
+                    email = found.email,
+                    keyForPush = localUser?.keyForPush.orEmpty(),
+                    score = 0
+                )
+
+                firebaseInterRegisterLoginRepository.updateUser(savedUser)
+
+                localStore.saveUser(savedUser)
+                localStore.saveGameProgress(0, 0)
+
+                _uiState.update {
+                    it.copy(
+                        name = found.name,
+                        email = found.email,
+                        password = found.password,
+                        screenState = RegisterScreenState.Registered,
+                        confirmPassword = found.password,
+                        showErrors = false
+                    )
+                }
+                updateValidation()
+            }.onFailure { exception ->
+                crashlyticsService.recordException(exception)
             }
-            updateValidation()
         }
     }
 
