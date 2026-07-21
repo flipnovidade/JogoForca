@@ -31,7 +31,7 @@ fun sharedModules() = module {
     factory { GlobalAnalyticsViewModel(get(), get()) }
     factory { AdsViewModel(get()) }
 
-    factory { InfoScreenViewModel(get(), get()) }
+    factory { InfoScreenViewModel(get(), get(), get()) }
     factory { GameScreenviewModel(get(), get(), get(), get()) }
     factory { RegisterScreenViewModel(get(), get(), get(), get(), get()) }
 }

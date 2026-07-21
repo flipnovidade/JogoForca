@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.AppVersion
+import com.game.forca.game_forca.ShowAdBanner
 import com.game.forca.game_forca.ad.AdMobBanner
 import com.game.forca.game_forca.ad.AdMobInterstitial
 import com.game.forca.game_forca.data.RankingItem
@@ -46,6 +47,30 @@ import org.koin.compose.koinInject
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
 import com.game.forca.game_forca.analytics.AnalyticsService
 import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
+import com.game.forca.game_forca.resources.info_screen_title
+import com.game.forca.game_forca.resources.section_ranking_title
+import com.game.forca.game_forca.resources.section_ranking_icon
+import com.game.forca.game_forca.resources.ranking_loading
+import com.game.forca.game_forca.resources.ranking_error
+import com.game.forca.game_forca.resources.ranking_empty
+import com.game.forca.game_forca.resources.section_app_details_title
+import com.game.forca.game_forca.resources.section_app_details_icon
+import com.game.forca.game_forca.resources.section_credits_title
+import com.game.forca.game_forca.resources.section_credits_icon
+import com.game.forca.game_forca.resources.ranking_header_position
+import com.game.forca.game_forca.resources.ranking_header_email
+import com.game.forca.game_forca.resources.ranking_header_points
+import com.game.forca.game_forca.resources.app_details_version_label
+import com.game.forca.game_forca.resources.app_details_updated_badge
+import com.game.forca.game_forca.resources.app_details_developer_label
+import com.game.forca.game_forca.resources.app_details_developer_name
+import com.game.forca.game_forca.resources.app_details_privacy_label
+import com.game.forca.game_forca.resources.app_details_privacy_value
 import org.jetbrains.compose.resources.stringResource
 
 @Composable
@@ -56,11 +81,20 @@ fun InfoScreen(
 ) {
 
     val adsConfig by adsViewModel.adsConfig.collectAsState()
-    
-    AdMobInterstitial(
-        adUnitId = adsConfig.interstitialAdUnitId,
-        showAd = adsConfig.showInterstitial
-    )
+    var show5SecAd by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        delay(5000L)
+        show5SecAd = true
+    }
+
+    if (show5SecAd) {
+        AdMobInterstitial(
+            adUnitId = adsConfig.interstitialAdUnitId,
+            showAd = adsConfig.showInterstitial
+        )
+    }
+
     val ranking by infoScreenViewModel.ranking.collectAsState()
     val isLoading by infoScreenViewModel.isLoading.collectAsState()
     val errorMessage by infoScreenViewModel.errorMessage.collectAsState()
@@ -95,42 +129,64 @@ fun InfoScreen(
                 .padding(16.dp)
         ) {
 
-            TopBar(title = "Informações", onBack = onBack)
+            TopBar(title = stringResource(Res.string.info_screen_title), onBack = onBack)
 
             Spacer(Modifier.height(24.dp))
 
-            SectionTitle("Ranking Geral", "📊")
+            SectionTitle(
+                title = stringResource(Res.string.section_ranking_title),
+                icon = stringResource(Res.string.section_ranking_icon)
+            )
             when {
-                isLoading -> RankingStatusCard("Carregando ranking...")
-                errorMessage != null -> RankingStatusCard(errorMessage ?: "Erro ao carregar ranking.")
-                ranking.isEmpty() -> RankingStatusCard("Nenhum ranking encontrado.")
+                isLoading -> RankingStatusCard(stringResource(Res.string.ranking_loading))
+                errorMessage != null -> RankingStatusCard(errorMessage ?: stringResource(Res.string.ranking_error))
+                ranking.isEmpty() -> RankingStatusCard(stringResource(Res.string.ranking_empty))
                 else -> RankingCard(ranking, myEmail)
             }
 
             Spacer(Modifier.height(24.dp))
 
-            SectionTitle("Detalhes do App", "ℹ️")
+            SectionTitle(
+                title = stringResource(Res.string.section_app_details_title),
+                icon = stringResource(Res.string.section_app_details_icon)
+            )
             AppDetailsCard(infoScreenViewModel.appVersion)
 
             Spacer(Modifier.height(24.dp))
 
-            SectionTitle("Créditos", "💙")
+            SectionTitle(
+                title = stringResource(Res.string.section_credits_title),
+                icon = stringResource(Res.string.section_credits_icon)
+            )
             CreditsCard()
 
             Spacer(Modifier.height(32.dp))
             if (adsConfig.showBannerBottom) {
-                AdMobBanner(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    adUnitId = adsConfig.bannerBottomAdUnitId
-                )
+                ShowAdBanner()
+//                AdMobBanner(
+//                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+//                    adUnitId = adsConfig.bannerBottomAdUnitId
+//                )
             }
         }
     }
 }
 
 @Composable
-fun SectionTitle(x0: String, x1: String) {
-    //TODO("Not yet implemented")
+fun SectionTitle(title: String, icon: String) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(bottom = 12.dp)
+    ) {
+        Text(text = icon, fontSize = 20.sp)
+        Spacer(Modifier.width(8.dp))
+        Text(
+            text = title,
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White
+        )
+    }
 }
 
 @Composable
@@ -144,14 +200,8 @@ fun CreditsCard() {
     ) {
         CreditItem(stringResource(Res.string.credit_main_designer_title), "Alex Rivers")
         CreditItem(stringResource(Res.string.credit_illustrations_title), "Sarah Chen, Vector Lab")
-        CreditItem(
-            stringResource(Res.string.credit_ack_title),
-            stringResource(Res.string.credit_ack_text)
-        )
-        CreditItem(
-            stringResource(Res.string.credit_awards_title),
-            stringResource(Res.string.credit_awards_text)
-        )
+        CreditItem(stringResource(Res.string.credit_ack_title), stringResource(Res.string.credit_ack_text))
+        CreditItem(stringResource(Res.string.credit_awards_title), stringResource(Res.string.credit_awards_text))
     }
 }
 
@@ -198,9 +248,9 @@ private fun HeaderRow() {
     Row(
         modifier = Modifier.padding(vertical = 8.dp)
     ) {
-        HeaderText("POSIÇÃO", Modifier.width(80.dp))
-        HeaderText("EMAIL", Modifier.weight(1f))
-        HeaderText("PONTOS", Modifier.width(80.dp), alignEnd = true)
+        HeaderText(stringResource(Res.string.ranking_header_position), Modifier.width(80.dp))
+        HeaderText(stringResource(Res.string.ranking_header_email), Modifier.weight(1f))
+        HeaderText(stringResource(Res.string.ranking_header_points), Modifier.width(80.dp), alignEnd = true)
     }
 }
 
@@ -293,12 +343,18 @@ fun AppDetailsCard(appVersion: AppVersion) {
             .padding(16.dp)
     ) {
         DetailRow(
-            "Versão",
+            stringResource(Res.string.app_details_version_label),
             "${appVersion.name} (Build ${appVersion.build})",
-            trailing = "ATUALIZADO"
+            trailing = stringResource(Res.string.app_details_updated_badge)
         )
-        DetailRow("Desenvolvedor", "Flip Soft.")
-        DetailRow("Privacidade", "Outubro 2023")
+        DetailRow(
+            stringResource(Res.string.app_details_developer_label),
+            stringResource(Res.string.app_details_developer_name)
+        )
+        DetailRow(
+            stringResource(Res.string.app_details_privacy_label),
+            stringResource(Res.string.app_details_privacy_value)
+        )
     }
 }
 

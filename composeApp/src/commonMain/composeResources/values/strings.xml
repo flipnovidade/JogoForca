@@ -90,4 +90,8 @@
     <string name="make_login_dialog_message">To continue playing and compete for prizes</string>
     <string name="make_login_dialog_text">SIGN IN OR REGISTER!</string>
     <string name="make_login_dialog_btn">Enjoy  →</string>
+    <string name="rewarded_ad_dialog_title">Earn Bonus Point!</string>
+    <string name="rewarded_ad_dialog_message">Watch a short video to earn +1 bonus point before continuing!</string>
+    <string name="rewarded_ad_dialog_button">Watch Video</string>
+    <string name="rewarded_ad_dialog_skip">Skip</string>
 </resources>

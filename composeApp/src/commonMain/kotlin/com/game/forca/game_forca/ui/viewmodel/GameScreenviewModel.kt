@@ -334,5 +334,18 @@ class GameScreenviewModel(
         }
     }
 
+    fun addRewardPoint() {
+        _globalScore.update { it + 1 }
+        viewModelScope.launch {
+            val localUser = localStore.getUser()
+            if (localUser != null && isLoggedIn(localUser)) {
+                val updatedUser = localUser.copy(score = localUser.score + 1)
+                localStore.saveUser(updatedUser)
+                firebaseInterRegisterLoginRepository.updateUser(updatedUser)
+            }
+        }
+    }
+
 }
+
 

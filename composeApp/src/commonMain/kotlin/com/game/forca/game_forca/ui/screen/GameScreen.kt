@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavHostController
+import com.game.forca.game_forca.ShowAdBanner
 import com.game.forca.game_forca.ad.AdMobBanner
 import com.game.forca.game_forca.ad.AdMobInterstitial
 import com.game.forca.game_forca.ad.AdMobRewarded
@@ -71,6 +72,13 @@ import org.koin.compose.koinInject
 import com.game.forca.game_forca.analytics.AnalyticsService
 import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
 
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.text.style.TextAlign
+import com.game.forca.game_forca.resources.rewarded_ad_dialog_title
+import com.game.forca.game_forca.resources.rewarded_ad_dialog_message
+import com.game.forca.game_forca.resources.rewarded_ad_dialog_button
+import com.game.forca.game_forca.resources.rewarded_ad_dialog_skip
+
 @Composable
 fun GameScreen(
     navController: NavHostController,
@@ -79,22 +87,48 @@ fun GameScreen(
 ) {
 
     val adsConfig by adsViewModel.adsConfig.collectAsState()
-
-    AdMobInterstitial(
-        adUnitId = adsConfig.interstitialAdUnitId,
-        showAd = adsConfig.showInterstitial
-    )
-    AdMobRewarded(
-        adUnitId = adsConfig.rewardedAdUnitId,
-        showAd = adsConfig.showRewarded
-    )
+    val state by gameScreenviewModel.state.collectAsState()
+    val globalScore by gameScreenviewModel.globalScore.collectAsState()
     val localStore: RegisterUserLocalStore = koinInject()
     var showRulesDialog by remember { mutableStateOf(false) }
-
     val backStackEntries by navController.currentBackStack.collectAsState()
-
-    val state by gameScreenviewModel.state.collectAsState()
     val currentRoute = navController.currentDestination?.route
+    var showHintInterstitial by remember { mutableStateOf(false) }
+    var showWinInterstitial by remember { mutableStateOf(false) }
+    var showRewardedAd by remember { mutableStateOf(false) }
+    var showRewardedAdExplanationDialog by remember { mutableStateOf(false) }
+    var victoryCount by remember { mutableStateOf(0) }
+    var errorCount by remember { mutableStateOf(0) }
+    val openDialogMakeLogin by gameScreenviewModel.openDialogMakeLogin.collectAsState()
+
+    if (showHintInterstitial || showWinInterstitial) {
+        AdMobInterstitial(
+            adUnitId = adsConfig.interstitialAdUnitId,
+            showAd = adsConfig.showInterstitial
+        )
+    }
+
+    if (showRewardedAd) {
+        AdMobRewarded(
+            adUnitId = adsConfig.rewardedAdUnitId,
+            showAd = adsConfig.showRewarded
+        )
+    }
+
+    if (showRewardedAdExplanationDialog) {
+        RewardedAdExplanationDialog(
+            onWatchAd = {
+                showRewardedAdExplanationDialog = false
+                gameScreenviewModel.addRewardPoint()
+                showRewardedAd = true
+                navController.navigate("gameOver/${state.word}/$globalScore")
+            },
+            onSkip = {
+                showRewardedAdExplanationDialog = false
+                navController.navigate("gameOver/${state.word}/$globalScore")
+            }
+        )
+    }
 
     val displayWord = state.word.mapIndexed { index, char ->
         if (index in state.revealedIndexes) char else ' '
@@ -117,8 +151,6 @@ fun GameScreen(
         }
     }
 
-    val openDialogMakeLogin by gameScreenviewModel.openDialogMakeLogin.collectAsState()
-
     LaunchedEffect(openDialogMakeLogin) {
         if (openDialogMakeLogin) {
             navController.navigate("makelogin")
@@ -127,19 +159,33 @@ fun GameScreen(
 
     LaunchedEffect(state.showHintDialog) {
         if (state.showHintDialog) {
+            showHintInterstitial = true
             navController.navigate("hint/${state.assayHelp}")
+        } else {
+            showHintInterstitial = false
         }
     }
 
     LaunchedEffect(state.showWinDialog) {
         if (state.showWinDialog) {
+            victoryCount++
+            if (victoryCount % 2 == 0) {
+                showWinInterstitial = true
+            }
             navController.navigate("victory/${state.word}/${state.finalScore}")
+        } else {
+            showWinInterstitial = false
         }
     }
 
     LaunchedEffect(state.showErrorDialog) {
         if (state.showErrorDialog) {
-            navController.navigate("gameOver/${state.word}/${gameScreenviewModel.globalScore.value}")
+            errorCount++
+            if (errorCount % 2 == 0) {
+                showRewardedAdExplanationDialog = true
+            } else {
+                navController.navigate("gameOver/${state.word}/${gameScreenviewModel.globalScore.value}")
+            }
         }
     }
 
@@ -181,7 +227,6 @@ fun GameScreen(
             user.keyForPush.isNotBlank()
         showRulesDialog = !loggedIn
     }
-
 
     val resultFlowHintDialog =
         navController.currentBackStackEntry
@@ -418,10 +463,11 @@ fun GameScreen(
 
             Spacer(Modifier.height(16.dp))
             if (adsConfig.showBannerBottom) {
-                AdMobBanner(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    adUnitId = adsConfig.bannerBottomAdUnitId
-                )
+                ShowAdBanner()
+//                AdMobBanner(
+//                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+//                    adUnitId = adsConfig.bannerBottomAdUnitId
+//                )
             }
         }
     }
@@ -760,5 +806,84 @@ fun BottomCircleButton(
             color = Color.White,
             fontSize = 12.sp
         )
+    }
+}
+
+@Composable
+fun RewardedAdExplanationDialog(
+    onWatchAd: () -> Unit,
+    onSkip: () -> Unit
+) {
+    Dialog(onDismissRequest = onSkip) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(28.dp))
+                .background(
+                    Brush.verticalGradient(
+                        listOf(Color(0xFF142254), Color(0xFF0B1437))
+                    )
+                )
+                .padding(24.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = "🎬", fontSize = 48.sp)
+                Spacer(Modifier.height(16.dp))
+                Text(
+                    text = stringResource(Res.string.rewarded_ad_dialog_title),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.height(12.dp))
+                Text(
+                    text = stringResource(Res.string.rewarded_ad_dialog_message),
+                    fontSize = 14.sp,
+                    color = Color.White.copy(alpha = 0.8f),
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.height(24.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Color.White.copy(alpha = 0.1f))
+                            .clickable { onSkip() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.rewarded_ad_dialog_skip),
+                            color = Color.White.copy(alpha = 0.7f),
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .height(48.dp)
+                            .clip(RoundedCornerShape(14.dp))
+                            .background(Color(0xFF4A8CFF))
+                            .clickable { onWatchAd() },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = stringResource(Res.string.rewarded_ad_dialog_button),
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            }
+        }
     }
 }

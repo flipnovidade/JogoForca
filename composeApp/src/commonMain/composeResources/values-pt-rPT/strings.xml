@@ -90,4 +90,8 @@
     <string name="make_login_dialog_message">Para continuar jogando e concorrer a prêmios</string>
     <string name="make_login_dialog_text">FAÇA LOGIN OU CADASTRE-SE!</string>
     <string name="make_login_dialog_btn">Aproveitar  →</string>
+    <string name="rewarded_ad_dialog_title">Ganhe Ponto Bônus!</string>
+    <string name="rewarded_ad_dialog_message">Assista a um vídeo curto para ganhar +1 ponto no seu placar antes de continuar!</string>
+    <string name="rewarded_ad_dialog_button">Assistir Vídeo</string>
+    <string name="rewarded_ad_dialog_skip">Pular</string>
 </resources>

@@ -20,6 +20,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,6 +36,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.game.forca.game_forca.ShowAdBanner
 import com.game.forca.game_forca.ad.AdMobBanner
 import com.game.forca.game_forca.ad.AdMobInterstitial
 import com.game.forca.game_forca.resources.Res
@@ -83,19 +87,29 @@ fun RegisterScreen(
 ) {
 
     val adsConfig by adsViewModel.adsConfig.collectAsState()
-
-    AdMobInterstitial(
-        adUnitId = adsConfig.interstitialAdUnitId,
-        showAd = adsConfig.showInterstitial
-    )
     val uiState by registerScreenViewModel.uiState.collectAsState()
     val validation by registerScreenViewModel.validation.collectAsState()
+    val currentState = uiState.screenState
+    val previousState = remember { mutableStateOf<RegisterScreenState?>(null) }
+    var showInterstitialOnRegister by remember { mutableStateOf(false) }
+
+    LaunchedEffect(currentState) {
+        if (previousState.value != null && currentState == RegisterScreenState.Registered && previousState.value != RegisterScreenState.Registered) {
+            showInterstitialOnRegister = true
+        }
+        previousState.value = currentState
+    }
+
+    if (showInterstitialOnRegister) {
+        AdMobInterstitial(
+            adUnitId = adsConfig.interstitialAdUnitId,
+            showAd = adsConfig.showInterstitial
+        )
+    }
 
     LaunchedEffect(screenState) {
         //registerScreenViewModel.setScreenState(screenState)
     }
-
-    val currentState = uiState.screenState
     val name = uiState.name
     val email = uiState.email
     val password = uiState.password
@@ -342,10 +356,11 @@ fun RegisterScreen(
                 RegisterScreenState.Registered -> Unit
             }
             if (adsConfig.showBannerBottom) {
-                AdMobBanner(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    adUnitId = adsConfig.bannerBottomAdUnitId
-                )
+                ShowAdBanner()
+//                AdMobBanner(
+//                        modifier = Modifier.fillMaxWidth().padding(16.dp),
+//                adUnitId = adsConfig.bannerBottomAdUnitId
+//                )
             }
         }
     }
