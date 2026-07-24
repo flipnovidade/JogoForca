@@ -32,7 +32,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.game.forca.game_forca.AppVersion
 import com.game.forca.game_forca.ShowAdBanner
-import com.game.forca.game_forca.ad.AdMobBanner
 import com.game.forca.game_forca.ad.AdMobInterstitial
 import com.game.forca.game_forca.data.RankingItem
 import com.game.forca.game_forca.resources.Res
@@ -45,7 +44,6 @@ import com.game.forca.game_forca.resources.credit_main_designer_title
 import com.game.forca.game_forca.ui.viewmodel.InfoScreenViewModel
 import org.koin.compose.koinInject
 import com.game.forca.game_forca.ui.components.RegisterBackHandler
-import com.game.forca.game_forca.analytics.AnalyticsService
 import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -72,6 +70,7 @@ import com.game.forca.game_forca.resources.app_details_developer_name
 import com.game.forca.game_forca.resources.app_details_privacy_label
 import com.game.forca.game_forca.resources.app_details_privacy_value
 import org.jetbrains.compose.resources.stringResource
+import kotlin.time.Duration.Companion.milliseconds
 
 @Composable
 fun InfoScreen(
@@ -84,7 +83,7 @@ fun InfoScreen(
     var show5SecAd by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        delay(5000L)
+        delay(5000L.milliseconds)
         show5SecAd = true
     }
 

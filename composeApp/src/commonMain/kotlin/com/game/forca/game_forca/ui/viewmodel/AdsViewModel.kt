@@ -2,7 +2,7 @@ package com.game.forca.game_forca.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.game.forca.game_forca.config.RemoteConfigService
+import com.game.forca.game_forca.service.RemoteConfigService
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

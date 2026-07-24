@@ -1,8 +1,8 @@
 package com.game.forca.game_forca.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.game.forca.game_forca.analytics.AnalyticsService
-import com.game.forca.game_forca.crashlytics.CrashlyticsService
+import com.game.forca.game_forca.service.AnalyticsService
+import com.game.forca.game_forca.service.CrashlyticsService
 
 class GlobalAnalyticsViewModel(
     private val analyticsService: AnalyticsService,

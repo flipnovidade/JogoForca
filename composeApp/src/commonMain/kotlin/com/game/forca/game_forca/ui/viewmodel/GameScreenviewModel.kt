@@ -19,8 +19,8 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import kotlin.Int
 import kotlin.String
 
-import com.game.forca.game_forca.analytics.AnalyticsService
-import com.game.forca.game_forca.crashlytics.CrashlyticsService
+import com.game.forca.game_forca.service.AnalyticsService
+import com.game.forca.game_forca.service.CrashlyticsService
 
 class GameScreenviewModel(
     private val localStore: RegisterUserLocalStore,

@@ -10,15 +10,14 @@ import com.game.forca.game_forca.ui.viewmodel.GameScreenviewModel
 import com.game.forca.game_forca.ui.viewmodel.InfoScreenViewModel
 import com.game.forca.game_forca.ui.viewmodel.RegisterScreenViewModel
 import org.koin.dsl.module
-
-import com.game.forca.game_forca.analytics.AnalyticsService
-import com.game.forca.game_forca.analytics.AnalyticsServiceImpl
+import com.game.forca.game_forca.service.AnalyticsService
+import com.game.forca.game_forca.service.AnalyticsServiceImpl
 import com.game.forca.game_forca.ui.viewmodel.GlobalAnalyticsViewModel
-import com.game.forca.game_forca.config.RemoteConfigService
-import com.game.forca.game_forca.config.RemoteConfigServiceImpl
+import com.game.forca.game_forca.service.RemoteConfigService
+import com.game.forca.game_forca.service.RemoteConfigServiceImpl
 import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
-import com.game.forca.game_forca.crashlytics.CrashlyticsService
-import com.game.forca.game_forca.crashlytics.CrashlyticsServiceImpl
+import com.game.forca.game_forca.service.CrashlyticsService
+import com.game.forca.game_forca.service.CrashlyticsServiceImpl
 
 fun sharedModules() = module {
     single<FirebaseInterRankingRepository> { FirebaseFirebaseInterRankingRepository() }

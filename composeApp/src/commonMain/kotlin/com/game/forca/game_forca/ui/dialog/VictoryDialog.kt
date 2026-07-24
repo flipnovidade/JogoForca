@@ -35,7 +35,6 @@ import com.game.forca.game_forca.resources.victory_icon
 import com.game.forca.game_forca.resources.victory_title
 import com.game.forca.game_forca.resources.word_was_label
 import org.jetbrains.compose.resources.stringResource
-import com.game.forca.game_forca.analytics.AnalyticsService
 import com.game.forca.game_forca.ui.viewmodel.GlobalAnalyticsViewModel
 import org.koin.compose.koinInject
 

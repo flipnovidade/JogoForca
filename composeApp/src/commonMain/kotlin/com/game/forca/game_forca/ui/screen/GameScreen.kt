@@ -69,7 +69,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.resources.stringResource
 
 import org.koin.compose.koinInject
-import com.game.forca.game_forca.analytics.AnalyticsService
 import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
 
 import androidx.compose.ui.window.Dialog
@@ -464,10 +463,10 @@ fun GameScreen(
             Spacer(Modifier.height(16.dp))
             if (adsConfig.showBannerBottom) {
                 ShowAdBanner()
-//                AdMobBanner(
-//                    modifier = Modifier.fillMaxWidth().padding(16.dp),
-//                    adUnitId = adsConfig.bannerBottomAdUnitId
-//                )
+                AdMobBanner(
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
+                    adUnitId = adsConfig.bannerBottomAdUnitId
+                )
             }
         }
     }

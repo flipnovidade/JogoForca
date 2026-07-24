@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.flow.asStateFlow
-import com.game.forca.game_forca.analytics.AnalyticsService
-import com.game.forca.game_forca.crashlytics.CrashlyticsService
+import com.game.forca.game_forca.service.AnalyticsService
+import com.game.forca.game_forca.service.CrashlyticsService
 
 data class RegisterUiState(
     val screenState: RegisterScreenState = RegisterScreenState.Register,

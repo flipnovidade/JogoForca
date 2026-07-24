@@ -10,8 +10,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
 
-import com.game.forca.game_forca.analytics.AnalyticsService
-import com.game.forca.game_forca.crashlytics.CrashlyticsService
+import com.game.forca.game_forca.service.AnalyticsService
+import com.game.forca.game_forca.service.CrashlyticsService
 
 class InfoScreenViewModel(
     private val firebaseInterRankingRepository: FirebaseInterRankingRepository,

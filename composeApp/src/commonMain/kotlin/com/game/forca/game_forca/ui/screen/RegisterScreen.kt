@@ -69,7 +69,6 @@ import com.game.forca.game_forca.ui.components.RegisterBackHandler
 import com.game.forca.game_forca.ui.viewmodel.RegisterScreenViewModel
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.koinInject
-import com.game.forca.game_forca.analytics.AnalyticsService
 import com.game.forca.game_forca.ui.viewmodel.AdsViewModel
 
 enum class RegisterScreenState {
